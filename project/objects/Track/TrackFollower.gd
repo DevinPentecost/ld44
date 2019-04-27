@@ -202,7 +202,8 @@ var old_rotation = 0
 func _process(delta):
 	
 	var currentOffset = pathNode.get_offset()
-	pathNode.set_offset(currentOffset + (delta * speed))
+	var speed_adjust = 10 + speed * 4
+	pathNode.set_offset(currentOffset + (delta * speed_adjust))
 	emit_signal("position_update", pathNode.transform)
 	
 	var new_rotation = pathNode.transform.basis.get_euler()

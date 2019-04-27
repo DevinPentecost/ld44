@@ -11,6 +11,7 @@ onready var player = $Player
 
 onready var speed_label = $PlayerSpeed
 onready var health_bar = $HealthBar
+onready var track = $TrackFollower
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -19,6 +20,9 @@ func _ready():
 func _process(delta):
 	_display_speed()
 	_display_health()
+	
+	#Tell the track how fast to go
+	track.speed = player.current_speed
 
 func _display_speed():
 	var text = \"F/B Speed: %s\\nL/R Speed: %s\" % [player.current_speed, player.current_turn_speed]

@@ -1,5 +1,7 @@
 extends KinematicBody
 
+signal player_died
+
 #What is the current movement state
 class MovementState:
 	var boost = false
@@ -34,17 +36,26 @@ class CollisionState:
 	var shoulder = false
 	var wall = false
 	
-	var obstacle_speed #How much to slow down to if you hit an obstacle (instant)
+	var obstacle_speed = 1 #How much to slow down to if you hit an obstacle (instant)
+	var obstacle_health_damage = 10 #How much health is lost per obstacle
 	
+	var wall_health_loss = 15 #How much health to lose per second when hitting the wall
 	var wall_speed_adjust = -7 #How slow to go when hitting the wall
 	var wall_acceleration = 8 #How quickly to slow down when hitting the wall
 	
+	var shoulder_health_loss = 7 #How much health we lose in the shoulder per second
 	var shoulder_speed_adjust = -4 #Speed is reduced by this much on the shoulder
 	
 	func is_colliding_shoulder():
 		return shoulder and not wall
 
 var collision_state = CollisionState.new()
+
+#Player health
+var is_alive = true
+var max_health = 100
+var current_health = max_health
+var health_loss =  3.5 #Health loss per second
 
 
 #Turning speeds
@@ -58,17 +69,19 @@ var current_speed = 1
 var current_acceleration = 0
 var target_speed = 0
 
-
 var max_speed = 10
 var min_speed = 1
 var acceleration = 4
 
+#Boost stuff
 var max_speed_boost = 15
 var acceleration_boost = 5
+var health_loss_boost = 4.5 #Health loss per second
 
+#Brake stuff
 var speed_brake = 3
 var acceleration_brake = -9
-
+var health_loss_brake = -25 #Health recovered per second
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -98,8 +111,13 @@ func _physics_process(delta):
 	
 	#Are we speeding?
 	_process_movement_forward(delta)
+	
+	#Handle health effects
+	_process_health(delta)
 
 func _process_movement_forward(delta):
+	if not is_alive:
+		return
 	
 	#Are we boosting or braking?
 	if movement_state.is_braking():
@@ -153,6 +171,8 @@ func _process_movement_forward(delta):
 	current_speed = max(current_speed, min_speed)
 	
 func _process_movement_turn(delta):
+	if not is_alive:
+		return
 	
 	#Which direction to move?
 	var movement_direction = movement_state.get_movement_direction()
@@ -174,7 +194,42 @@ func _process_movement_turn(delta):
 	
 	#Move the player left and right accordingly
 	move_and_collide(movement_vector)
+
+func _process_health(delta):
+	if not is_alive:
+		return
 	
+	#How much health to lose?
+	var health_to_lose = health_loss
+	
+	#Are we boosting?
+	if movement_state.is_boosting():
+		health_to_lose = health_loss_boost
+	elif movement_state.is_braking():
+		health_to_lose = health_loss_brake
+		
+	#Adjust for being in the shoulder
+	if collision_state.wall:
+		health_to_lose = collision_state.wall_health_loss
+	elif collision_state.is_colliding_shoulder():
+		health_to_lose = collision_state.shoulder_health_loss
+	
+	#Adjust for the frame rate
+	health_to_lose *= delta
+	
+	#Lose the health
+	current_health -= health_to_lose
+	
+	#Can't go over max
+	current_health = min(current_health, max_health)
+	
+	#Did we go under?
+	if current_health < 0:
+		emit_signal("player_died")
+		is_alive = false
+		
+		#TODO: Do player dead stuff
+
 func _unhandled_key_input(event):
 	
 	#We respond to various movement commands
@@ -194,6 +249,17 @@ func _unhandled_key_input(event):
 		movement_state.brake = true
 	elif event.is_action_released("brake"):
 		movement_state.brake = false
+
+func hit_obstacle(obstacle):
+	
+	#We need to slow down!
+	current_speed = collision_state.obstacle_speed
+	
+	#Handle being hit (lose health)
+	current_health -= collision_state.obstacle_health_damage
+	
+	#Play an animation for getting hit or something
+	#TODO: MAKE IT HAPPEN!
 
 func _on_shoulder_body_entered(body):
 	#Check we're the one who is affected

@@ -1,13 +1,9 @@
 extends Position3D
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
-onready var nodescene = preload("res://scenes/caleb/SimpleNode.tscn")
-onready var blueScene = preload("res://scenes/caleb/BlueNode.tscn")
-onready var purpScene = preload("res://scenes/caleb/PurpleNode.tscn")
-onready var roadscene = preload("res://scenes/caleb/Road.tscn")
+onready var nodescene = preload("res://objects/Track/Debug/RedNode.tscn")
+onready var blueScene = preload("res://objects/Track/Debug/BlueNode.tscn")
+onready var purpScene = preload("res://objects/Track/Debug/PurpleNode.tscn")
+onready var roadscene = preload("res://objects/Track/Road.tscn")
 
 onready var trackDefinition = _generateTrackLayout()
 onready var nodes = []
@@ -18,6 +14,7 @@ signal turning(turn_amount)
 
 export var speed = 30
 
+onready var pathNode = $trackPath/PathFollow
 
 # Produces a track layout, which is an object.
 # The layout has a dictionary of information
@@ -203,9 +200,10 @@ var old_rotation = 0
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	var pathNode = self.get_node("trackPath/PathFollow")
+	
 	var currentOffset = pathNode.get_offset()
-	pathNode.set_offset(currentOffset + (delta * speed))
+	var speed_adjust = 10 + speed * 4
+	pathNode.set_offset(currentOffset + (delta * speed_adjust))
 	emit_signal("position_update", pathNode.transform)
 	
 	var new_rotation = pathNode.transform.basis.get_euler()

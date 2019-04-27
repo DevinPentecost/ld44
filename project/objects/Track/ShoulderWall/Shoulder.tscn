@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://objects/Track/ShoulderWall/Shoulder.gd" type="Script" id=1]
+
+[sub_resource type="BoxShape" id=1]
+extents = Vector3( 4, 1, 1 )
+
+[sub_resource type="SpatialMaterial" id=2]
+albedo_color = Color( 0.14902, 0.372549, 0.0470588, 1 )
+
+[sub_resource type="CubeMesh" id=3]
+material = SubResource( 2 )
+size = Vector3( 8, 2, 2 )
+
+[node name="Shoulder" type="Area"]
+script = ExtResource( 1 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 0 )
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -0.5, 0 )
+mesh = SubResource( 3 )
+material/0 = null
+
+[connection signal="body_entered" from="." to="." method="_on_Shoulder_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_Shoulder_body_exited"]

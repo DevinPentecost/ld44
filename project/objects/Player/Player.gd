@@ -11,6 +11,9 @@ class MovementState:
 	var left = false
 	var right = false
 	
+	#When the track turns, the player also slides
+	var slide = 0 #The amount to slide the player (negative is left)
+	
 	func get_movement_direction():
 		"""
 		Determines the direction the player is trying to move
@@ -189,12 +192,17 @@ func _process_movement_turn(delta):
 		turning_speed = turn_boost_speed
 		
 	
+	#Calculate turn movement
 	current_turn_speed = turning_speed * movement_direction
 	
-	var movement_vector = Vector3(turning_speed, 0, 0) * movement_direction
+	#Adjust for slide
+	current_turn_speed += movement_state.slide
 	
 	#Adjust based on frame delta
-	movement_vector = movement_vector * delta
+	var final_turn_speed = current_turn_speed * delta
+	
+	#Make a vector
+	var movement_vector = Vector3(final_turn_speed, 0, 0)
 	
 	#Move the player left and right accordingly
 	move_and_collide(movement_vector)
@@ -287,24 +295,16 @@ func hit_pedestrian(pedestrian):
 	
 	#TODO: Animate if it was bad or good or whatever
 
-func _on_shoulder_body_entered(body):
-	#Check we're the one who is affected
-	if body == self:
-		collision_state.shoulder = true
-		
+func hit_shoulder(enter):
+	#Change state accordingly
+	collision_state.shoulder = enter
 
-func _on_shoulder_body_exited(body):
-	#Check if we're the one who is affected
-	if body == self:
-		collision_state.shoulder = false
+func hit_wall(enter):
+	#Change state accordingly
+	collision_state.wall = enter
 
-func _on_wall_body_entered(body):
-	#Check we're the one who is affected
-	if body == self:
-		collision_state.wall = true
-		
-
-func _on_wall_body_exited(body):
-	#Check if we're the one who is affected
-	if body == self:
-		collision_state.wall = false
+func _on_TrackFollower_turning(turn_amount):
+	
+	#Slide the player that much
+	movement_state.slide = turn_amount * -100
+	

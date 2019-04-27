@@ -1,0 +1,58 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://objects/Track/TrackFollower.gd" type="Script" id=1]
+[ext_resource path="res://objects/Track/FollowTrack.gd" type="Script" id=2]
+[ext_resource path="res://objects/Track/RotateTrack.gd" type="Script" id=3]
+[ext_resource path="res://objects/Track/ShoulderWall/ShoulderWall.tscn" type="PackedScene" id=4]
+
+[sub_resource type="Curve3D" id=1]
+_data = {
+"points": PoolVector3Array(  ),
+"tilts": PoolRealArray(  )
+}
+
+[node name="TrackFollower" type="Position3D"]
+script = ExtResource( 1 )
+
+[node name="trackPath" type="Path" parent="."]
+editor/display_folded = true
+curve = SubResource( 1 )
+
+[node name="PathFollow" type="PathFollow" parent="trackPath"]
+rotation_mode = 1
+
+[node name="FollowTrack" type="Position3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.01, -25 )
+script = ExtResource( 2 )
+
+[node name="RotateTrack" type="Position3D" parent="."]
+editor/display_folded = true
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.01, -25 )
+script = ExtResource( 3 )
+
+[node name="Light Sources" type="Position3D" parent="RotateTrack"]
+editor/display_folded = true
+
+[node name="fromTop" type="DirectionalLight" parent="RotateTrack/Light Sources"]
+transform = Transform( 1, 0, 0, 0, 0.258819, 0.965926, 0, -0.965926, 0.258819, 0, -10, 0 )
+
+[node name="fromBack" type="DirectionalLight" parent="RotateTrack/Light Sources"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0 )
+light_color = Color( 0.470588, 0, 0, 1 )
+
+[node name="fromLeft" type="DirectionalLight" parent="RotateTrack/Light Sources"]
+transform = Transform( -4.37114e-008, 0, -1, 0, 1, 0, 1, 0, -4.37114e-008, 0, -10, 0 )
+light_energy = 0.25
+
+[node name="fromRight" type="DirectionalLight" parent="RotateTrack/Light Sources"]
+transform = Transform( -4.37114e-008, 0, 1, 0, 1, 0, -1, 0, -4.37114e-008, 0, -10, 0 )
+light_energy = 0.25
+
+[node name="IgnoreTrack" type="Position3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.01, -25 )
+
+[node name="ShoulderWall" parent="." instance=ExtResource( 4 )]
+
+[connection signal="position_update" from="." to="FollowTrack" method="_on_TrackFollower_position_update"]
+[connection signal="position_update" from="." to="RotateTrack" method="_on_TrackFollower_position_update"]
+[connection signal="turning" from="." to="ShoulderWall" method="_on_TrackFollower_turning"]

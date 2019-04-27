@@ -1,7 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://objects/Player/Player.gd" type="Script" id=1]
-[ext_resource path="res://objects/Player/SmokeParticles.tscn" type="PackedScene" id=2]
+[ext_resource path="res://assets/3d/CarModel.tscn" type="PackedScene" id=2]
+[ext_resource path="res://assets/3d/PlayerModel.tscn" type="PackedScene" id=3]
+[ext_resource path="res://objects/Player/SmokeParticles.tscn" type="PackedScene" id=4]
 
 [sub_resource type="BoxShape" id=1]
 
@@ -12,13 +14,19 @@
 ]]
 script = ExtResource( 1 )
 
+[node name="Car" parent="." instance=ExtResource( 2 )]
+
+[node name="Mage" parent="Car" instance=ExtResource( 3 )]
+transform = Transform( 0.2, 0, 1.77636e-15, 0, 0.2, 0, -1.77636e-15, 0, 0.2, 0, 0.564664, 0 )
+
 [node name="CollisionShape" type="CollisionShape" parent="."]
 shape = SubResource( 1 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
+visible = false
 mesh = SubResource( 2 )
 material/0 = null
 
-[node name="SmokeParticles" parent="." instance=ExtResource( 2 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.03074 )
+[node name="SmokeParticles" parent="." instance=ExtResource( 4 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.403137, 0, 1.03074 )
 

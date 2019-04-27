@@ -6,6 +6,7 @@ signal player_force_brake(start)
 #Grab nodes
 onready var _idle_engine_player = $IdleEngine
 onready var _boost_engine_player = $BoostEngine
+onready var _scrape_player = $ScrapePlayer
 
 #What is the current movement state
 class MovementState:
@@ -106,6 +107,9 @@ func _ready():
 	#Process every frame as well
 	#set_process(true)
 	set_physics_process(true)
+	
+	#Turn on the engine
+	_idle_engine_player.playing = true
 
 func connect_to_terrain_areas(shoulders, walls):
 	#Each shoulder needs to connect it's body entered function to call our callback
@@ -322,13 +326,25 @@ func hit_pedestrian(pedestrian):
 	
 	#TODO: Animate if it was bad or good or whatever
 
-func hit_shoulder(enter):
+func hit_shoulder(shoulder, enter):
 	#Change state accordingly
 	collision_state.shoulder = enter
 
-func hit_wall(enter):
+func hit_wall(wall, enter):
 	#Change state accordingly
 	collision_state.wall = enter
+	
+	#Make sparks?
+	if enter:
+		var side = 0.8
+		if wall.global_transform.origin.x < global_transform.origin.x:
+			side = -side
+		$SparkParticles.transform.origin.x = side
+	$SparkParticles.emitting = enter
+	
+	#Check the SFX too
+	_scrape_player.playing = enter
+	
 
 func _on_TrackFollower_turning(turn_amount):
 	

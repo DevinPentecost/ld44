@@ -254,8 +254,10 @@ func _unhandled_key_input(event):
 		movement_state.right = false
 	elif event.is_action_pressed("boost"):
 		movement_state.boost = true
+		$BoostEngine.playing = true
 	elif event.is_action_released("boost"):
 		movement_state.boost = false
+		$BoostEngine.playing = false
 	elif event.is_action_pressed("brake"):
 		movement_state.brake = true
 	elif event.is_action_released("brake"):

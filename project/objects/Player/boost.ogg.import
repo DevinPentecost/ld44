@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/boost.ogg-50bea37218bedfd94cf456588f847142.oggstr"
+
+[deps]
+
+source_file="res://objects/Player/boost.ogg"
+dest_files=[ "res://.import/boost.ogg-50bea37218bedfd94cf456588f847142.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

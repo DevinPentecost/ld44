@@ -1,7 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://objects/Player/Player.gd" type="Script" id=1]
 [ext_resource path="res://objects/Player/SmokeParticles.tscn" type="PackedScene" id=2]
+[ext_resource path="res://objects/Player/engine_idle.ogg" type="AudioStream" id=3]
+[ext_resource path="res://objects/Player/boost.ogg" type="AudioStream" id=4]
 
 [sub_resource type="BoxShape" id=1]
 
@@ -21,4 +23,13 @@ material/0 = null
 
 [node name="SmokeParticles" parent="." instance=ExtResource( 2 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.03074 )
+
+[node name="IdleEngine" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 3 )
+unit_db = 10.0
+autoplay = true
+
+[node name="BoostEngine" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 4 )
+unit_db = 18.0
 

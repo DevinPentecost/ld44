@@ -30,6 +30,7 @@ stream = ExtResource( 4 )
 unit_db = 18.0
 
 [node name="CarModel" parent="." instance=ExtResource( 5 )]
+editor/display_folded = true
 
 [node name="PlayerModel" parent="CarModel" instance=ExtResource( 6 )]
 

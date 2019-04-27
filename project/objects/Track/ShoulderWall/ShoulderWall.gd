@@ -3,7 +3,7 @@ extends Spatial
 onready var shoulders = $Shoulders
 onready var walls = $Walls
 
-var max_shoulder_movement = 4
+var max_shoulder_movement = 6
 
 func _on_TrackFollower_turning(turn_amount):
 	

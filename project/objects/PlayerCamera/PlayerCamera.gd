@@ -3,6 +3,11 @@ extends InterpolatedCamera
 export(NodePath) var player
 onready var _player = get_node(player)
 
+#Adjust camera based on player turning and speed
+var camera_accelleration = 3
+var camera_pan_multiplier = 0.2 #Move this much per unit of left/right movement
+var camera_rise_multiplier = -0.3 #Move this much vertically based on speed
+
 #Variables related to camera shake
 var shake_base = 0.01
 var shake_amount = shake_base
@@ -56,9 +61,14 @@ func _process(delta):
 	
 func _process_camera(delta):
 	
-	#Move towards our desired location
+	#Adjust target position
+	target_position = default_position
+	target_position.x += _player.current_turn_speed * camera_pan_multiplier
+	target_position.y += _player.current_speed * camera_rise_multiplier
 	
-	var final_position = target_position
+	#Move towards our desired location
+	var current_position = transform.origin
+	var final_position = current_position + (target_position - current_position) * (camera_accelleration * delta)
 	
 	#Shake a little
 	var time = OS.get_ticks_msec() / 15

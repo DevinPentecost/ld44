@@ -3,6 +3,10 @@ extends KinematicBody
 signal player_died
 signal player_force_brake(start)
 
+#Grab nodes
+onready var _idle_engine_player = $IdleEngine
+onready var _boost_engine_player = $BoostEngine
+
 #What is the current movement state
 class MovementState:
 	var boost = false
@@ -88,6 +92,11 @@ var speed_brake = 3
 var acceleration_brake = -9
 var health_loss_brake = -15 #Health recovered per second
 
+#SFX
+var min_idle_pitch = 0.9
+var max_idle_pitch = 1.4
+var max_idle_pitch_speed = 15
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	
@@ -121,6 +130,9 @@ func _physics_process(delta):
 	
 	#Handle health effects
 	_process_health(delta)
+	
+	#Handle engine sounds
+	_process_engine_sfx(delta)
 
 func _process_movement_forward(delta):
 	if not is_alive:
@@ -176,6 +188,7 @@ func _process_movement_forward(delta):
 			
 	#Make sure we don't accidentally go too slow
 	current_speed = max(current_speed, min_speed)
+	current_speed = float(current_speed)
 	
 func _process_movement_turn(delta):
 	if not is_alive:
@@ -249,6 +262,22 @@ func _process_health(delta):
 		
 		#TODO: Do player dead stuff
 
+func _process_engine_sfx(delta):
+	
+	#Change idle pitch based on speed
+	var idle_pitch_weight = current_speed/max_idle_pitch_speed
+	var idle_pitch = lerp(min_idle_pitch, max_idle_pitch, idle_pitch_weight)
+	print(current_speed, idle_pitch)
+	_idle_engine_player.pitch_scale = idle_pitch
+	
+	#Are we boosting?
+	if _boost_engine_player.playing:
+		if not movement_state.is_boosting():
+			_boost_engine_player.playing = false
+	else:
+		if movement_state.is_boosting():
+			_boost_engine_player.playing = true
+
 func _unhandled_key_input(event):
 	
 	#We respond to various movement commands
@@ -262,10 +291,8 @@ func _unhandled_key_input(event):
 		movement_state.right = false
 	elif event.is_action_pressed("boost"):
 		movement_state.boost = true
-		$BoostEngine.playing = true
 	elif event.is_action_released("boost"):
 		movement_state.boost = false
-		$BoostEngine.playing = false
 	elif event.is_action_pressed("brake"):
 		movement_state.brake = true
 	elif event.is_action_released("brake"):
@@ -306,5 +333,5 @@ func hit_wall(enter):
 func _on_TrackFollower_turning(turn_amount):
 	
 	#Slide the player that much
-	movement_state.slide = turn_amount * -100
+	movement_state.slide = turn_amount * -300
 	

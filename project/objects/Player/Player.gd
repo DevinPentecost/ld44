@@ -285,13 +285,13 @@ func hit_obstacle(obstacle):
 func hit_pedestrian(pedestrian):
 	
 	#Was this a good pedestrian or bad?
-	var is_good = pedestrian.health_loss <= 0 and pedestrian.speed_loss <= 0
+	var is_good = pedestrian.health_change <= 0 and pedestrian.speed_change <= 0
 	
 	#Take the health hit
-	current_health -= pedestrian.health_loss
+	current_health += pedestrian.health_change
 	
 	#Slow down if it was bad
-	current_speed -= pedestrian.speed_loss
+	current_speed += pedestrian.speed_change
 	
 	#TODO: Animate if it was bad or good or whatever
 

@@ -71,14 +71,6 @@ text = "GAME OVER"
 align = 1
 uppercase = true
 
-[node name="HealthBar" type="ProgressBar" parent="."]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -103.0
-margin_top = 46.3291
-margin_right = 1.0
-margin_bottom = 60.3291
-
 [node name="PlayerSpeed" type="Label" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0

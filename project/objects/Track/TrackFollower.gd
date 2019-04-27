@@ -1,5 +1,8 @@
 extends Position3D
 
+var PedestrianSpawn = preload("res://objects/Track/Pedestrian.gd").PedestrianSpawn
+var PedestrianScene = preload("res://objects/Track/Pedestrian.tscn")
+
 onready var nodescene = preload("res://objects/Track/Debug/RedNode.tscn")
 onready var blueScene = preload("res://objects/Track/Debug/BlueNode.tscn")
 onready var purpScene = preload("res://objects/Track/Debug/PurpleNode.tscn")
@@ -15,6 +18,10 @@ signal turning(turn_amount)
 export var speed = 30
 
 onready var pathNode = $trackPath/PathFollow
+onready var _follow_track = $FollowTrack
+
+
+
 
 # Produces a track layout, which is an object.
 # The layout has a dictionary of information
@@ -70,6 +77,9 @@ func _generateTrackLayout():
 	# [1] will be the obstacle scene to place into the track
 	track["obstacles"] = _generateObstacles(length)
 	
+	#Get the pedestrian objects for this course
+	track['pedestrians'] = _generate_pedestrians(length)
+	
 	# Give this dictionary to the caller
 	return track
 
@@ -100,6 +110,26 @@ func _generateObstacles(length):
 		obstacleList.append([dist * averageDistribution, obstaclesToPlace.pop_back()])
 	
 	return obstacleList
+
+func _generate_pedestrians(length):
+	
+	var pedestrians = []
+	
+	#Generate some number of bad pedestrians (non-blood-bearing)
+	pass
+	
+	#Generate some number of good pedestrians (blood-bearing)
+	var good_pedestrian = PedestrianSpawn.new()
+	good_pedestrian.track_segment = 50
+	good_pedestrian.health_change = 35
+	good_pedestrian.move_speed = 4
+	good_pedestrian.start_position = 0
+	pedestrians.append(good_pedestrian)
+	
+	#Generate some number of powerups (blood but no impact)
+	pass
+	
+	return pedestrians
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -166,7 +196,7 @@ func _ready():
 		# Create a road scene and add
 		var roadPiece = roadscene.instance()
 		roadPiece.transform = pathNode.transform
-		get_node("FollowTrack").add_child(roadPiece)
+		_follow_track.add_child(roadPiece)
 		
 		var currentOffset = pathNode.get_offset()
 		pathNode.set_offset(currentOffset + 2.25)
@@ -178,6 +208,8 @@ func _ready():
 			if currObstacle[0] <= currentOffset:
 				# Add this baddy to the road segment
 				baddiesToAdd.append(self.trackDefinition["obstacles"].find(currObstacle))
+		
+		
 		
 		# Start popping from the list!
 		var baddiesPopped = 0
@@ -191,7 +223,20 @@ func _ready():
 			obstacleScene.show()
 			roadPiece.add_child(obstacleScene)
 			
+	
+	#Go through each pedestrian
+	var all_track_nodes = _follow_track.get_children()
+	for pedestrian_spawn in trackDefinition['pedestrians']:
 		
+		#Make a new pedestrian
+		var new_pedestrian = PedestrianScene.instance()
+		
+		#Apply variables from the spawn
+		new_pedestrian.apply_pedestrian_spawn(pedestrian_spawn)
+		
+		#Give it to the correct node
+		var track_node = all_track_nodes[pedestrian_spawn.track_segment]
+		track_node.add_child(new_pedestrian)
 	
 	# Reset the path
 	self.get_node("trackPath/PathFollow").set_offset(0)

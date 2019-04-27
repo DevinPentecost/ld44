@@ -90,6 +90,8 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
 
 [node name="PlayerCamera" parent="." instance=ExtResource( 2 )]
 transform = Transform( 1, 0, 0, 0, 0.906308, 0.422618, 0, -0.422618, 0.906308, 0, 7, 6.25 )
+target = NodePath("../TrackFollower")
+player = NodePath("../Player")
 
 [node name="TrackFollower" parent="." instance=ExtResource( 3 )]
 

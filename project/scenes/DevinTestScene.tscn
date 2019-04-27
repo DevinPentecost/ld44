@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://objects/Player/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://objects/PlayerCamera/PlayerCamera.tscn" type="PackedScene" id=2]
 [ext_resource path="res://objects/Track/Wall.tscn" type="PackedScene" id=3]
 [ext_resource path="res://objects/Track/Shoulder.tscn" type="PackedScene" id=4]
 [ext_resource path="res://objects/Track/Obstacle.tscn" type="PackedScene" id=5]
+[ext_resource path="res://objects/Track/Pedestrian.tscn" type="PackedScene" id=6]
 
 [sub_resource type="GDScript" id=8]
 script/source = "extends Spatial
@@ -27,7 +28,6 @@ func _process(delta):
 	_display_health()
 
 func _display_speed():
-	
 	var text = \"F/B Speed: %s\\nL/R Speed: %s\" % [player.current_speed, player.current_turn_speed]
 	speed_label.text = text
 	
@@ -41,6 +41,10 @@ func _on_Player_player_died():
 	#Show GAMEOVER
 	$GAMEOVER.show()
 	pass # Replace with function body.
+
+
+func _on_Player_player_force_brake(start):
+	$ForceBrake.visible = start
 "
 
 [sub_resource type="BoxShape" id=1]
@@ -55,6 +59,16 @@ size = Vector2( 40, 40 )
 
 [node name="DevinTestScene" type="Spatial"]
 script = SubResource( 8 )
+
+[node name="ForceBrake" type="Label" parent="."]
+visible = false
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = -7.0
+margin_bottom = 7.0
+text = "FORCE BRAKE UNTILL HEALED"
+align = 1
 
 [node name="GAMEOVER" type="Label" parent="."]
 visible = false
@@ -115,4 +129,8 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 0 )
 [node name="Obstacle" parent="." instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0 )
 
+[node name="Pedestrian" parent="." instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -5.49629, 0, 0 )
+
 [connection signal="player_died" from="Player" to="." method="_on_Player_player_died"]
+[connection signal="player_force_brake" from="Player" to="." method="_on_Player_player_force_brake"]

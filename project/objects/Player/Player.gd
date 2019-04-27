@@ -1,11 +1,13 @@
 extends KinematicBody
 
 signal player_died
+signal player_force_brake(start)
 
 #What is the current movement state
 class MovementState:
 	var boost = false
 	var brake = false
+	var force_brake = false
 	var left = false
 	var right = false
 	
@@ -25,10 +27,10 @@ class MovementState:
 		
 	func is_boosting():
 		#Can't boost if you're using the brake
-		return boost and not brake
+		return boost and not (brake or force_brake)
 	func is_braking():
 		#You can always brake
-		return brake
+		return brake or force_brake
 
 var movement_state = MovementState.new()
 
@@ -81,7 +83,7 @@ var health_loss_boost = 4.5 #Health loss per second
 #Brake stuff
 var speed_brake = 3
 var acceleration_brake = -9
-var health_loss_brake = -25 #Health recovered per second
+var health_loss_brake = -15 #Health recovered per second
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -105,6 +107,8 @@ func connect_to_terrain_areas(shoulders, walls):
 		wall.connect("body_exited", self, "_on_wall_body_exited")
 	
 func _physics_process(delta):
+	
+	#Do we have to force being braked?
 	
 	#Are we moving?
 	_process_movement_turn(delta)
@@ -221,12 +225,19 @@ func _process_health(delta):
 	current_health -= health_to_lose
 	
 	#Can't go over max
-	current_health = min(current_health, max_health)
-	
+	if current_health >= max_health:
+		current_health = min(current_health, max_health)
+		movement_state.force_brake = false
+		emit_signal("player_force_brake", false)
+		
 	#Did we go under?
 	if current_health < 0:
-		emit_signal("player_died")
-		is_alive = false
+		
+		#emit_signal("player_died")
+		#is_alive = false
+		
+		movement_state.force_brake = true
+		emit_signal("player_force_brake", true)
 		
 		#TODO: Do player dead stuff
 
@@ -260,6 +271,19 @@ func hit_obstacle(obstacle):
 	
 	#Play an animation for getting hit or something
 	#TODO: MAKE IT HAPPEN!
+
+func hit_pedestrian(pedestrian):
+	
+	#Was this a good pedestrian or bad?
+	var is_good = pedestrian.health_loss <= 0 and pedestrian.speed_loss <= 0
+	
+	#Take the health hit
+	current_health -= pedestrian.health_loss
+	
+	#Slow down if it was bad
+	current_speed -= pedestrian.speed_loss
+	
+	#TODO: Animate if it was bad or good or whatever
 
 func _on_shoulder_body_entered(body):
 	#Check we're the one who is affected

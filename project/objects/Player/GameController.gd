@@ -5,6 +5,7 @@ onready var _tween = $Tween
 #Keep track of the time
 var time = 0
 var finish_time = 0
+var brake_state = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -23,7 +24,22 @@ func _process(delta):
 		var seconds = int(round(time))%60
 		var time_stamp = "%02d : %02d" % [minutes, seconds]
 		$TimerLabel.text = time_stamp
-	
+		
+		
+		if brake_state != $Player.movement_state.is_braking():
+			brake_state = !brake_state
+			var fuel_angle = $FuelMeter.rect_rotation
+			_tween.stop_all()
+			if brake_state:
+				_tween.interpolate_property($FuelMeter, "rect_rotation", fuel_angle, 27, 0.1, Tween.TRANS_QUAD, Tween.EASE_OUT)
+			else:
+				_tween.interpolate_property($FuelMeter, "rect_rotation", fuel_angle ,0, 0.1, Tween.TRANS_QUAD, Tween.EASE_OUT)
+			_tween.start()
+			
+		
+	#TEST TO END GAME EARLY
+	#if time > 11 and finish_time == 0:
+	#	_end_race()
 
 
 func _start_race():
@@ -44,6 +60,9 @@ func _end_race():
 	#Show leaderboard info, let player submit
 	$WinScreen.visible = true
 	
+	
+	_tween.interpolate_property($WinScreen, "rect_position", Vector2(0,0), Vector2(0,400), 1, Tween.TRANS_QUAD,Tween.EASE_OUT)
+	_tween.start()
 	
 	#Lock camera, move player off screen
 	

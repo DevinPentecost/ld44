@@ -1,12 +1,18 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://objects/Player/GameController.gd" type="Script" id=1]
 [ext_resource path="res://objects/Player/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://objects/PlayerCamera/PlayerCamera.tscn" type="PackedScene" id=3]
 [ext_resource path="res://objects/Track/TrackFollower.tscn" type="PackedScene" id=4]
 [ext_resource path="res://objects/UI/FuelMeter.tscn" type="PackedScene" id=5]
-[ext_resource path="res://objects/UI/Progress.tscn" type="PackedScene" id=6]
-[ext_resource path="res://objects/UI/Bloodletting.tscn" type="PackedScene" id=7]
+[ext_resource path="res://assets/OpenSans-Bold.ttf" type="DynamicFontData" id=6]
+[ext_resource path="res://objects/UI/Progress.tscn" type="PackedScene" id=7]
+[ext_resource path="res://objects/UI/Bloodletting.tscn" type="PackedScene" id=8]
+
+[sub_resource type="DynamicFont" id=1]
+size = 64
+use_filter = true
+font_data = ExtResource( 6 )
 
 [node name="MainGame" type="Spatial"]
 script = ExtResource( 1 )
@@ -21,7 +27,6 @@ target = NodePath("../CameraTarget")
 
 [node name="TrackFollower" parent="." instance=ExtResource( 4 )]
 player = NodePath("../Player")
-player_camera = NodePath("../PlayerCamera")
 
 [node name="CameraTarget" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -4 )
@@ -34,15 +39,76 @@ margin_bottom = 761.276
 rect_scale = Vector2( 2.61234, 2.61234 )
 player = NodePath("../Player")
 
-[node name="Progress" parent="." instance=ExtResource( 6 )]
+[node name="TimerLabel" type="Label" parent="."]
+margin_left = 528.507
+margin_top = 23.2455
+margin_right = 949.507
+margin_bottom = 111.246
+custom_fonts/font = SubResource( 1 )
+
+[node name="Progress" parent="." instance=ExtResource( 7 )]
 track = NodePath("../TrackFollower")
 
 [node name="Tween" type="Tween" parent="."]
 
-[node name="Bloodletting" parent="." instance=ExtResource( 7 )]
+[node name="Bloodletting" parent="." instance=ExtResource( 8 )]
+
+[node name="WinScreen" type="Control" parent="."]
+margin_right = 1284.0
+margin_bottom = 719.0
+
+[node name="SubmitName" type="LineEdit" parent="WinScreen"]
+margin_left = 408.864
+margin_top = 268.395
+margin_right = 862.864
+margin_bottom = 351.395
+align = 1
+context_menu_enabled = false
+placeholder_text = "ENTER TEXT HERE"
+placeholder_alpha = 0.62
+
+[node name="SubmitScore" type="Button" parent="WinScreen"]
+margin_left = 412.892
+margin_top = 360.784
+margin_right = 632.892
+margin_bottom = 398.784
+text = "SUBMIT SCORE"
+
+[node name="ViewLB" type="Button" parent="WinScreen"]
+margin_left = 642.733
+margin_top = 361.262
+margin_right = 862.733
+margin_bottom = 399.262
+text = "LEADERBOARD (BROWSER)"
+
+[node name="QuitButton" type="Button" parent="WinScreen"]
+margin_left = 643.993
+margin_top = 411.051
+margin_right = 863.993
+margin_bottom = 449.051
+text = "QUIT"
+
+[node name="ReplayButton" type="Button" parent="WinScreen"]
+margin_left = 412.692
+margin_top = 409.791
+margin_right = 632.692
+margin_bottom = 447.791
+text = "REPLAY"
+
+[node name="SubmitMsg" type="Label" parent="WinScreen"]
+margin_left = 539.384
+margin_top = 213.139
+margin_right = 725.384
+margin_bottom = 234.139
+text = "awesome driving, great time!"
+
+[node name="HTTPRequest" type="HTTPRequest" parent="WinScreen"]
 
 [connection signal="player_force_brake" from="Player" to="." method="_on_Player_player_force_brake"]
 [connection signal="track_completed" from="TrackFollower" to="." method="_on_TrackFollower_track_completed"]
 [connection signal="track_completed" from="TrackFollower" to="FuelMeter" method="_on_TrackFollower_track_completed"]
 [connection signal="track_completed" from="TrackFollower" to="Progress" method="_on_TrackFollower_track_completed"]
 [connection signal="turning" from="TrackFollower" to="Player" method="_on_TrackFollower_turning"]
+[connection signal="button_up" from="WinScreen/SubmitScore" to="." method="_on_SubmitScore_button_up"]
+[connection signal="button_up" from="WinScreen/ViewLB" to="." method="_on_ViewLB_button_up"]
+[connection signal="button_up" from="WinScreen/QuitButton" to="." method="_on_QuitButton_button_up"]

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/smoke.png-d3c7d722b20eefaf8249d09a6aa8ab85.stex"
+path="res://.import/chalice.png-14676b2b6514057e4ce02b72f4b7d42f.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://objects/Player/BloodParticle/smoke.png"
-dest_files=[ "res://.import/smoke.png-d3c7d722b20eefaf8249d09a6aa8ab85.stex" ]
+source_file="res://assets/2d/buffs/chalice.png"
+dest_files=[ "res://.import/chalice.png-14676b2b6514057e4ce02b72f4b7d42f.stex" ]
 
 [params]
 

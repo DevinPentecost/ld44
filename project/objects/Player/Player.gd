@@ -11,6 +11,7 @@ onready var _boost_engine_player = $BoostEngine
 onready var _scrape_player = $ScrapePlayer
 onready var _smoke_particles = $SmokeParticles
 onready var _brake_timer = $BrakeTimer
+onready var player_anim = 	$CarModel/PlayerModel/AnimationPlayer
 
 #What is the current movement state
 class MovementState:
@@ -210,6 +211,16 @@ func _process_movement_turn(delta):
 	
 	#Which direction to move?
 	var movement_direction = movement_state.get_movement_direction()
+	var is_braking = movement_state.is_braking()
+		
+	if movement_direction > 0:
+		player_anim.play("armature|armature|steer.R|armature|steer.R")
+	elif movement_direction < 0:
+		player_anim.play("armature|armature|steer.L|armature|steer.L")
+	elif is_braking:
+		player_anim.play("armature|armature|braking|armature|braking")
+	else:
+		player_anim.play("armature|armature|boost|armature|boost")
 	
 	#Determine current turning speed based on brake/boost
 	var turning_speed = turn_speed
@@ -309,7 +320,6 @@ func _process_brake_timer(delta):
 			_brake_timer.stop()
 
 func _unhandled_key_input(event):
-	
 	#We respond to various movement commands
 	if event.is_action_pressed("move_left"):
 		movement_state.left = true
@@ -324,6 +334,7 @@ func _unhandled_key_input(event):
 	elif event.is_action_released("boost"):
 		movement_state.boost = false
 	elif event.is_action_pressed("brake"):
+		player_anim.play("armature|armature|braking|armature|braking")
 		movement_state.brake = true
 	elif event.is_action_released("brake"):
 		movement_state.brake = false

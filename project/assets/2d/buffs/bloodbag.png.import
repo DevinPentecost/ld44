@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/smoke.png-d3c7d722b20eefaf8249d09a6aa8ab85.stex"
+path="res://.import/bloodbag.png-1472a201d5b5b54a71ccd0353fc9bd9c.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://objects/Player/BloodParticle/smoke.png"
-dest_files=[ "res://.import/smoke.png-d3c7d722b20eefaf8249d09a6aa8ab85.stex" ]
+source_file="res://assets/2d/buffs/bloodbag.png"
+dest_files=[ "res://.import/bloodbag.png-1472a201d5b5b54a71ccd0353fc9bd9c.stex" ]
 
 [params]
 

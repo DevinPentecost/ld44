@@ -2,6 +2,7 @@ extends Position3D
 
 var PedestrianSpawn = preload("res://objects/Track/Pedestrian.gd").PedestrianSpawn
 var PedestrianScene = preload("res://objects/Track/Pedestrian.tscn")
+var SegmentScene = preload("res://objects/Track/Segment/Segment.tscn")
 
 onready var nodescene = preload("res://objects/Track/Debug/RedNode.tscn")
 onready var blueScene = preload("res://objects/Track/Debug/BlueNode.tscn")
@@ -12,6 +13,7 @@ onready var dirtscene = preload("res://scenes/caleb/Dirt.tscn")
 
 onready var trackDefinition = _generateTrackLayout()
 onready var nodes = []
+var segments = []
 onready var trackDemo = nodescene.instance()
 
 signal position_update(new_transform)
@@ -27,41 +29,54 @@ var startingTransform = null
 
 
 
+
 # Produces a track layout, which is an object.
 # The layout has a dictionary of information
 # as well as a big list of track nodes
 func _generateTrackLayout():
 	var track = {}
 	
-	var trackDefinition = []
-	trackDefinition.append([400, 0])
-	trackDefinition.append([400, 45])
-	trackDefinition.append([350, 0])
-	trackDefinition.append([300, 10])
-	trackDefinition.append([300, -10])
-	trackDefinition.append([250, -10])
-	trackDefinition.append([250, 0])
-	trackDefinition.append([300, 40])
-	trackDefinition.append([350, 5])
-	trackDefinition.append([300, -15])
-	trackDefinition.append([250, -15])
-	trackDefinition.append([300, 0])
-	trackDefinition.append([350, 0])
-	track["layout"] = trackDefinition
+	#Make some noise patterns
+	var direction_noise = OpenSimplexNoise.new()
+	direction_noise.persistence = 0.8
+	direction_noise.period = 10
+	direction_noise.octaves = 4
+	var base_direction = 20
+	var min_direction = -25
+	var max_direction = -min_height
+	var direction_deadzone = 0.5
 	
-	# Count the "length" of the track
-	var length = 0
-	for segment in track["layout"]:
-		length += segment[0]
-	track["length"] = length
+	var distance_noise = OpenSimplexNoise.new()
+	var min_distance = 250
+	var max_distance = 500
+	
+	#Generate a track
+	var tracks = []
+	var track_length = 100
+	for track_index in range(track_length):
+		
+		#Figure out how far this guy goes
+		var distance = min_distance + (max_distance-min_distance)*(distance_noise.get_noise_2d(track_index, 0) + 1)/2
+		
+		#Determine which height to use
+		var direction = 0
+		var direction_weight = height_noise.get_noise_2d(track_index, 0)
+		if abs(direction_weight) >= direction_deadzone:
+			direction = base_direction + lerp(min_direction, max_direction, (direction_weight + 1)
+		
+		#Add this section of track
+		tracks.append([distance, height])
+	
+	track["layout"] = tracks
+	track["length"] = track_length
 	
 	# Also generate obstacles that will go into this track
 	# [0] will be the location of the obstacle in track length
 	# [1] will be the obstacle scene to place into the track
-	track["obstacles"] = _generateObstacles(length)
+	track["obstacles"] = _generateObstacles(track_length)
 	
 	#Get the pedestrian objects for this course
-	track['pedestrians'] = _generate_pedestrians(length)
+	track['pedestrians'] = _generate_pedestrians(track_length)
 	
 	# Give this dictionary to the caller
 	return track
@@ -110,7 +125,7 @@ func _generate_pedestrians(length):
 	
 	#Generate some number of good pedestrians (blood-bearing)
 	var good_pedestrian = PedestrianSpawn.new()
-	good_pedestrian.track_segment = 50
+	good_pedestrian.track_segment = 5
 	good_pedestrian.health_change = 35
 	good_pedestrian.move_speed = 4
 	good_pedestrian.start_position = 0

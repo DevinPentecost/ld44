@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://objects/Player/Player.gd" type="Script" id=1]
 [ext_resource path="res://objects/Player/SmokeParticles.tscn" type="PackedScene" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://assets/3d/PlayerModel.tscn" type="PackedScene" id=6]
 [ext_resource path="res://objects/Player/spark.png" type="Texture" id=7]
 [ext_resource path="res://objects/Player/scrape.ogg" type="AudioStream" id=8]
+[ext_resource path="res://objects/Player/rough.ogg" type="AudioStream" id=9]
 
 [sub_resource type="BoxShape" id=1]
 
@@ -38,15 +39,16 @@ initial_velocity = 3.0
 
 [node name="IdleEngine" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource( 3 )
-unit_db = 10.0
+unit_db = 12.0
 autoplay = true
 
 [node name="BoostEngine" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource( 4 )
-unit_db = 18.0
+unit_db = 8.0
+pitch_scale = 0.5
 
 [node name="CarModel" parent="." instance=ExtResource( 5 )]
-transform = Transform( -0.5, 0, -4.37114e-08, 0, 0.5, 0, 4.37114e-08, 0, -0.5, 0, 0, 0 )
+transform = Transform( -0.5, 0, -4.37114e-008, 0, 0.5, 0, 4.37114e-008, 0, -0.5, 0, 0, 0 )
 
 [node name="PlayerModel" parent="CarModel" instance=ExtResource( 6 )]
 
@@ -68,5 +70,13 @@ unit_db = 6.4
 
 [node name="BrakeTimer" type="Timer" parent="."]
 wait_time = 0.25
+
+[node name="RoadSound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 9 )
+unit_db = 10.0
+pitch_scale = 2.0
+autoplay = true
+
+[node name="Tween" type="Tween" parent="."]
 
 [connection signal="timeout" from="BrakeTimer" to="." method="_on_BrakeTimer_timeout"]

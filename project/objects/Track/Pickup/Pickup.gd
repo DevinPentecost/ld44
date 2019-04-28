@@ -10,6 +10,12 @@ const _splat_sprite = preload("res://objects/Track/Pickup/splat.png")
 
 onready var sprite = $LoDSprite
 
+const hover_up_height = 5
+const hover_down_height = 3
+const hover_time = 0.25
+var hover_up = false
+
+
 #They have a health value
 var health_value = 35
 
@@ -24,12 +30,27 @@ func _ready():
 	sprite.tex_lod0 = target_sprite
 	sprite.tex_lod1 = target_sprite
 	
-	pass # Replace with function body.
+	
+	#Make hover happen
+	_hover()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
+func _hover():
+	
+	#Are we going up or down?
+	var target = hover_up_height
+	if not hover_up:
+		target = hover_down_height
+		
+	#Animate to that position
+	var start = sprite.transform.origin
+	var end = Vector3(start.x,  target, start.z)
+	$Tween.interpolate_property(sprite, "transform.origin", start, end, hover_time, Tween.TRANS_EXPO, Tween.EASE_OUT)
+	$Tween.start()
+	yield($Tween, "tween_completed")
+	
+	#Switch direction
+	hover_up = !hover_up
+	_hover()
 
 func _on_Area_body_entered(body):
 	
@@ -43,12 +64,9 @@ func _on_Area_body_entered(body):
 		
 func _die():
 	
-	#Change sprite
-	var target_sprite = _splat_sprite
-	sprite.tex_furthest = target_sprite
-	sprite.tex_closest = target_sprite
-	sprite.tex_lod0 = target_sprite
-	sprite.tex_lod1 = target_sprite
+	#Hide the sprite and shadow
+	sprite.visible = false
+	$Shadow.visible = false
 	
 	#Play a sound
 	$SFX.play()

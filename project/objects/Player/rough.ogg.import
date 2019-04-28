@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/rough.ogg-8d7b5c75a271c9f66238eb34a159c697.oggstr"
+
+[deps]
+
+source_file="res://objects/Player/rough.ogg"
+dest_files=[ "res://.import/rough.ogg-8d7b5c75a271c9f66238eb34a159c697.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

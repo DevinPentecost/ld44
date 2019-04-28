@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/chalice.png-246000a7bfd57cc3606b56d6b57fcb2a.s3tc.stex"
-path.etc="res://.import/chalice.png-246000a7bfd57cc3606b56d6b57fcb2a.etc.stex"
+path.s3tc="res://.import/shadow.png-909d237fbd6eb7cd8d53ec574a8d6efa.s3tc.stex"
+path.etc="res://.import/shadow.png-909d237fbd6eb7cd8d53ec574a8d6efa.etc.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://objects/Track/Pickup/chalice.png"
-dest_files=[ "res://.import/chalice.png-246000a7bfd57cc3606b56d6b57fcb2a.s3tc.stex", "res://.import/chalice.png-246000a7bfd57cc3606b56d6b57fcb2a.etc.stex" ]
+source_file="res://objects/Track/Pickup/shadow.png"
+dest_files=[ "res://.import/shadow.png-909d237fbd6eb7cd8d53ec574a8d6efa.s3tc.stex", "res://.import/shadow.png-909d237fbd6eb7cd8d53ec574a8d6efa.etc.stex" ]
 
 [params]
 

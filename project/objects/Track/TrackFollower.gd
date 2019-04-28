@@ -325,6 +325,7 @@ func _create_needed_track():
 			#Make the new pickup
 			var pickup = PickupScene.instance()
 			new_road.add_child(pickup)
+			pickup.transform.origin = new_road._get_random_position()
 			pickup.sprite.target = _player_camera
 			
 		#TODO: Reimplement adding obstacles

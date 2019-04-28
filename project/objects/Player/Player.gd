@@ -353,6 +353,18 @@ func hit_obstacle(obstacle):
 	#Play an animation for getting hit or something
 	#TODO: MAKE IT HAPPEN!
 
+func hit_pickup(pickup):
+	
+	#Spawn a bunch of blood (GROSSSSSS)
+	var count = 7
+	count += randi() % 6
+	_spawn_blood(count)
+	
+	#Play a pickup sound
+	
+	#Gain some health
+	current_health += pickup.health_value
+
 func hit_pedestrian(pedestrian):
 	
 	#Was this a good pedestrian or bad?
@@ -389,7 +401,7 @@ func hit_wall(wall, enter):
 func _on_TrackFollower_turning(turn_amount):
 	
 	#Slide the player that much
-	movement_state.slide = turn_amount * -300
+	movement_state.slide = turn_amount * -500
 	
 
 
@@ -398,7 +410,13 @@ func _on_BrakeTimer_timeout():
 	#The brake timer needs to keep going
 	_brake_timer.start()
 	
-	#Spawn a new blood boy
-	var blood_particle = BloodParticle.instance()
-	add_child(blood_particle)
+	_spawn_blood()
 
+func _spawn_blood(amount=1):
+	
+	#Make 'em!
+	for blood in range(amount):
+		
+		#Spawn a new blood boy
+		var blood_particle = BloodParticle.instance()
+		add_child(blood_particle)

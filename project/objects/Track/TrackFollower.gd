@@ -265,7 +265,6 @@ func _process_movement(delta):
 	#Move the progress follower up
 	var current_offset = _progress_follow.get_offset()
 	var speed_adjust = 10 + _player.current_speed * 4
-	speed_adjust = 50
 	
 	var new_offset = current_offset + (delta * speed_adjust)
 	_progress_follow.set_offset(new_offset)

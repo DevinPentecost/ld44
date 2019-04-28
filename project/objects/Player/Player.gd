@@ -386,7 +386,7 @@ func hit_wall(wall, enter):
 func _on_TrackFollower_turning(turn_amount):
 	
 	#Slide the player that much
-	movement_state.slide = turn_amount * -300
+	movement_state.slide = turn_amount * -500
 	
 
 

@@ -9,6 +9,8 @@ onready var _target = get_node(target)
 var camera_accelleration = 4
 var camera_pan_multiplier = 0.4 #Move this much per unit of left/right movement
 var camera_rise_multiplier = -0.3 #Move this much vertically based on speed
+#var camera_fov_multiplier = 2 #
+
 
 #Variables related to camera shake
 var shake_base = 0.01
@@ -73,6 +75,7 @@ func _process_camera(delta):
 	target_position = default_position
 	target_position.x += _player.current_turn_speed * camera_pan_multiplier
 	target_position.y += _player.current_speed * camera_rise_multiplier
+	#fov = 70 + _player.current_speed * camera_rise_multiplier
 	
 	#Move towards our desired location
 	var current_position = transform.origin

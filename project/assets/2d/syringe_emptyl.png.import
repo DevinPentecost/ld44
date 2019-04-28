@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/skybox_test.jpg-1b9c4a435d97443d4053a1bf05f941a0.stex"
+path="res://.import/syringe_emptyl.png-1c221332a6c9b634ae9533604d559fb8.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/2d/skybox_test.jpg"
-dest_files=[ "res://.import/skybox_test.jpg-1b9c4a435d97443d4053a1bf05f941a0.stex" ]
+source_file="res://assets/2d/syringe_emptyl.png"
+dest_files=[ "res://.import/syringe_emptyl.png-1c221332a6c9b634ae9533604d559fb8.stex" ]
 
 [params]
 

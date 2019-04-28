@@ -14,7 +14,8 @@ script = ExtResource( 1 )
 [node name="Player" parent="." instance=ExtResource( 2 )]
 
 [node name="PlayerCamera" parent="." instance=ExtResource( 3 )]
-transform = Transform( 1, 0, 0, 0, 0.951057, 0.309017, 0, -0.309017, 0.951057, 0, 9, 8 )
+transform = Transform( 1, 0, 0, 0, 0.951057, 0.309017, 0, -0.309017, 0.951057, 0, 9, 9.27127 )
+fov = 60.0
 player = NodePath("../Player")
 target = NodePath("../CameraTarget")
 
@@ -26,6 +27,11 @@ player_camera = NodePath("../PlayerCamera")
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -4 )
 
 [node name="FuelMeter" parent="." instance=ExtResource( 5 )]
+margin_left = -72.429
+margin_top = 361.276
+margin_right = 327.571
+margin_bottom = 761.276
+rect_scale = Vector2( 2.61234, 2.61234 )
 player = NodePath("../Player")
 
 [node name="Progress" parent="." instance=ExtResource( 6 )]

@@ -18,6 +18,7 @@ func _process(delta):
 	#Check player health
 	var health = _player.current_health
 	$FuelBar.value = health
+	$Syringe/Syringe_bar.value = health
 	
 	#Is it low?
 	if health < 25:

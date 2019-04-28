@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/chalice.png-246000a7bfd57cc3606b56d6b57fcb2a.s3tc.stex"
-path.etc="res://.import/chalice.png-246000a7bfd57cc3606b56d6b57fcb2a.etc.stex"
+path.s3tc="res://.import/dirt.png-bce94e605b5c35f77f985d4c8fae211d.s3tc.stex"
+path.etc="res://.import/dirt.png-bce94e605b5c35f77f985d4c8fae211d.etc.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://objects/Track/Pickup/chalice.png"
-dest_files=[ "res://.import/chalice.png-246000a7bfd57cc3606b56d6b57fcb2a.s3tc.stex", "res://.import/chalice.png-246000a7bfd57cc3606b56d6b57fcb2a.etc.stex" ]
+source_file="res://assets/2d/obstacles/dirt.png"
+dest_files=[ "res://.import/dirt.png-bce94e605b5c35f77f985d4c8fae211d.s3tc.stex", "res://.import/dirt.png-bce94e605b5c35f77f985d4c8fae211d.etc.stex" ]
 
 [params]
 

@@ -63,6 +63,7 @@ target = NodePath("../CameraTarget")
 
 [node name="TrackFollower" parent="." instance=ExtResource( 4 )]
 player = NodePath("../Player")
+player_camera = NodePath("../PlayerCamera")
 
 [node name="CameraTarget" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -4 )

@@ -11,9 +11,7 @@ var brake_state = false
 func _ready():
 	
 	set_process(true)
-	
-	
-	pass # Replace with function body.
+
 
 func _process(delta):
 	

@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/caleb/LoDSprite.tscn" type="PackedScene" id=1]
+[ext_resource path="res://assets/2d/obstacles/dirt.png" type="Texture" id=2]
+
+[node name="Dirt" type="Spatial"]
+
+[node name="LoDSprite" parent="." instance=ExtResource( 1 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.803699, 0 )
+texture = ExtResource( 2 )
+tex_furthest = ExtResource( 2 )
+tex_lod0 = ExtResource( 2 )
+tex_lod1 = ExtResource( 2 )
+tex_closest = ExtResource( 2 )
+

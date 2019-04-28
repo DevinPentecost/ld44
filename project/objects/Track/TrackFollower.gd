@@ -19,7 +19,7 @@ onready var blueScene = preload("res://objects/Track/Debug/BlueNode.tscn")
 onready var purpScene = preload("res://objects/Track/Debug/PurpleNode.tscn")
 onready var roadscene = preload("res://objects/Track/Road.tscn")
 onready var treescene = preload("res://scenes/caleb/Tree.tscn")
-onready var dirtscene = preload("res://scenes/caleb/Dirt.tscn")
+onready var dirtscene = preload("res://objects/Track/Dirt.tscn")
 
 onready var trackDefinition = _generateTrackLayout()
 var unused_segments = []
@@ -305,6 +305,7 @@ func _create_needed_track():
 			var sprite = dirt.get_node("LoDSprite")
 			sprite.target = _player_camera
 			new_road.add_child(dirt)
+			dirt.transform.origin = new_road._get_random_position()
 		
 		#Spawn assorted trees
 		var make_tree = (randf() * 100) < 10
@@ -325,6 +326,7 @@ func _create_needed_track():
 			#Make the new pickup
 			var pickup = PickupScene.instance()
 			new_road.add_child(pickup)
+			pickup.transform.origin = new_road._get_random_position()
 			pickup.sprite.target = _player_camera
 			
 		#TODO: Reimplement adding obstacles

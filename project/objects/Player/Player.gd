@@ -105,6 +105,12 @@ var min_idle_pitch = 0.9
 var max_idle_pitch = 1.4
 var max_idle_pitch_speed = 15
 
+var road_pitch_normal = 2
+var road_db_normal = 10
+var road_pitch_shoulder = 0.5
+var road_db_shoulder = 15
+var road_tween_time = 0.25
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	
@@ -381,6 +387,17 @@ func hit_pedestrian(pedestrian):
 func hit_shoulder(shoulder, enter):
 	#Change state accordingly
 	collision_state.shoulder = enter
+	
+	#Set up the SFX to match
+	var target_db = road_db_normal
+	var target_pitch = road_pitch_normal
+	if enter:
+		target_db = road_db_shoulder
+		target_pitch = road_pitch_shoulder
+		
+	$Tween.interpolate_property($RoadSound, "unit_db", $RoadSound.unit_db, target_db, road_tween_time, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	$Tween.interpolate_property($RoadSound, "pitch_scale", $RoadSound.pitch_scale, target_pitch, road_tween_time, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	$Tween.start()
 
 func hit_wall(wall, enter):
 	#Change state accordingly
@@ -401,7 +418,7 @@ func hit_wall(wall, enter):
 func _on_TrackFollower_turning(turn_amount):
 	
 	#Slide the player that much
-	movement_state.slide = turn_amount * -500
+	movement_state.slide = turn_amount * -800
 	
 
 

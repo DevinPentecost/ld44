@@ -22,6 +22,8 @@ export var speed = 30
 onready var pathNode = $trackPath/PathFollow
 onready var _follow_track = $FollowTrack
 
+var old_rotation = 0
+var startingTransform = null
 
 
 
@@ -178,11 +180,11 @@ func _ready():
 	
 	# Generate a path from this curve
 	self.get_node("trackPath").set_curve(trackCurve)
-	self.get_node("trackPath/PathFollow").add_child(trackDemo)
-	self.get_node("trackPath/PathFollow").set_offset(0)
+	pathNode.add_child(trackDemo)
+	pathNode.set_offset(0)
+	startingTransform = pathNode.transform
 	
 	# Create "road" scenes througought the path
-	var pathNode = self.get_node("trackPath/PathFollow")
 	var unitoffset = pathNode.get_unit_offset()
 	while (unitoffset) < 1:
 		# Create a road scene and add
@@ -246,14 +248,20 @@ func _ready():
 		track_node.add_child(new_pedestrian)
 	
 	# Reset the path
-	self.get_node("trackPath/PathFollow").set_offset(0)
+	pathNode.set_offset(0)
+	pathNode.transform = startingTransform
 	
-var old_rotation = 0
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	# Are we looping?
+	if pathNode.get_unit_offset() > 1:
+		pathNode.set_offset(0)
+		pathNode.transform = startingTransform
+	
 	
 	var currentOffset = pathNode.get_offset()
+	
 	var speed_adjust = 10 + speed * 4
 	pathNode.set_offset(currentOffset + (delta * speed_adjust))
 	emit_signal("position_update", pathNode.transform)

@@ -8,10 +8,12 @@
 [ext_resource path="res://assets/2d/tree_lod1.png" type="Texture" id=6]
 
 [node name="Tree" type="Spatial"]
+transform = Transform( 6, 0, 0, 0, 6, 0, 0, 0, 6, 0, 0, 0 )
 script = ExtResource( 1 )
 
 [node name="LoDSprite" parent="." instance=ExtResource( 2 )]
-transform = Transform( 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0 )
+centered = false
+pixel_size = 0.1
 texture = ExtResource( 3 )
 tex_furthest = ExtResource( 4 )
 tex_lod0 = ExtResource( 5 )

@@ -31,6 +31,6 @@ func _on_TrackFollower_position_update(new_transform):
 	#newBasis = Basis(Vectoy3(0,1,0), PI) * new_transform.basis
 	#var new_rotation = new_transform.basis.get_euler()
 	var degrees = deg2rad(new_transform.basis.get_euler()[1])
-	degrees = new_transform.basis.get_euler()[1] + (PI/4)
+	degrees = new_transform.basis.get_euler()[1]
 	self.transform = original_transform.rotated(Vector3(0, 1, 0), (-1) * degrees)
 	pass

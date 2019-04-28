@@ -10,9 +10,9 @@ export(Texture) var tex_lod0
 export(Texture) var tex_lod1
 export(Texture) var tex_closest
 
-export(float) var lod0_start = 100
-export(float) var lod1_start = 60
-export(float) var closest_start = 30
+export(float) var lod0_start = 250
+export(float) var lod1_start = 150
+export(float) var closest_start = 80
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

@@ -82,10 +82,12 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
 
 [node name="PlayerCamera" parent="." instance=ExtResource( 2 )]
 transform = Transform( 1, 0, 0, 0, 0.951267, 0.30837, 0, -0.30837, 0.951267, 0, 8.91796, 7.8423 )
+far = 300.0
 target = NodePath("../CameraTarget")
 player = NodePath("../Player")
 
 [node name="TrackFollower" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 
 [node name="UI" type="Control" parent="."]
 editor/display_folded = true

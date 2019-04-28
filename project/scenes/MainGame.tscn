@@ -43,6 +43,6 @@ track = NodePath("../TrackFollower")
 
 [connection signal="player_force_brake" from="Player" to="." method="_on_Player_player_force_brake"]
 [connection signal="track_completed" from="TrackFollower" to="." method="_on_TrackFollower_track_completed"]
-[connection signal="track_completed" from="TrackFollower" to="Progress" method="_on_TrackFollower_track_completed"]
 [connection signal="track_completed" from="TrackFollower" to="FuelMeter" method="_on_TrackFollower_track_completed"]
+[connection signal="track_completed" from="TrackFollower" to="Progress" method="_on_TrackFollower_track_completed"]
 [connection signal="turning" from="TrackFollower" to="Player" method="_on_TrackFollower_turning"]

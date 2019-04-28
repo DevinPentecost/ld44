@@ -44,3 +44,10 @@ func _end_race():
 
 func _on_TrackFollower_track_completed():
 	pass # Replace with function body.
+
+
+func _on_Player_player_force_brake(start):
+	
+	#Show the bloodletter
+	$Bloodletting.set_show(start)
+	pass # Replace with function body.

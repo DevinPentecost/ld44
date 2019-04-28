@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://objects/Player/GameController.gd" type="Script" id=1]
 [ext_resource path="res://objects/Player/Player.tscn" type="PackedScene" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://objects/Track/TrackFollower.tscn" type="PackedScene" id=4]
 [ext_resource path="res://objects/UI/FuelMeter.tscn" type="PackedScene" id=5]
 [ext_resource path="res://objects/UI/Progress.tscn" type="PackedScene" id=6]
+[ext_resource path="res://objects/UI/Bloodletting.tscn" type="PackedScene" id=7]
 
 [node name="MainGame" type="Spatial"]
 script = ExtResource( 1 )
@@ -31,7 +32,10 @@ track = NodePath("../TrackFollower")
 
 [node name="Tween" type="Tween" parent="."]
 
+[node name="Bloodletting" parent="." instance=ExtResource( 7 )]
+
+[connection signal="player_force_brake" from="Player" to="." method="_on_Player_player_force_brake"]
 [connection signal="track_completed" from="TrackFollower" to="." method="_on_TrackFollower_track_completed"]
-[connection signal="track_completed" from="TrackFollower" to="FuelMeter" method="_on_TrackFollower_track_completed"]
 [connection signal="track_completed" from="TrackFollower" to="Progress" method="_on_TrackFollower_track_completed"]
+[connection signal="track_completed" from="TrackFollower" to="FuelMeter" method="_on_TrackFollower_track_completed"]
 [connection signal="turning" from="TrackFollower" to="Player" method="_on_TrackFollower_turning"]

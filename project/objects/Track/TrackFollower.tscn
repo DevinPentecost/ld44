@@ -39,16 +39,16 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0 )
 light_color = Color( 0.470588, 0, 0, 1 )
 
 [node name="fromLeft" type="DirectionalLight" parent="RotateTrack/Light Sources"]
-transform = Transform( -4.37114e-008, 0, -1, 0, 1, 0, 1, 0, -4.37114e-008, 0, -10, 0 )
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, -10, 0 )
 light_energy = 0.25
 
 [node name="fromRight" type="DirectionalLight" parent="RotateTrack/Light Sources"]
-transform = Transform( -4.37114e-008, 0, 1, 0, 1, 0, -1, 0, -4.37114e-008, 0, -10, 0 )
+transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, -10, 0 )
 light_energy = 0.25
 
 [node name="IgnoreTrack" type="Position3D" parent="."]
 
 [node name="ShoulderWall" parent="." instance=ExtResource( 4 )]
 
-[connection signal="position_update" from="." to="RotateTrack" method="_on_TrackFollower_position_update"]
 [connection signal="position_update" from="." to="FollowTrack" method="_on_TrackFollower_position_update"]
+[connection signal="position_update" from="." to="RotateTrack" method="_on_TrackFollower_position_update"]

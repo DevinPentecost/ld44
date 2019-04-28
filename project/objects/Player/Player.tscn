@@ -46,7 +46,7 @@ stream = ExtResource( 4 )
 unit_db = 18.0
 
 [node name="CarModel" parent="." instance=ExtResource( 5 )]
-editor/display_folded = true
+transform = Transform( -0.5, 0, -4.37114e-08, 0, 0.5, 0, 4.37114e-08, 0, -0.5, 0, 0, 0 )
 
 [node name="PlayerModel" parent="CarModel" instance=ExtResource( 6 )]
 

@@ -4,9 +4,10 @@ signal position_update(new_transform)
 signal turning(turn_amount)
 signal track_completed
 
-var PedestrianSpawn = preload("res://objects/Track/Pedestrian.gd").PedestrianSpawn
-var PedestrianScene = preload("res://objects/Track/Pedestrian.tscn")
-var SegmentScene = preload("res://objects/Track/Segment/Segment.tscn")
+const PedestrianSpawn = preload("res://objects/Track/Pedestrian.gd").PedestrianSpawn
+const PedestrianScene = preload("res://objects/Track/Pedestrian.tscn")
+const SegmentScene = preload("res://objects/Track/Segment/Segment.tscn")
+const PickupScene = preload("res://objects/Track/Pickup/Pickup.tscn")
 
 export(NodePath) var player
 onready var _player = get_node(player)
@@ -24,7 +25,7 @@ onready var trackDefinition = _generateTrackLayout()
 var unused_segments = []
 var next_generate_offset = 0.001
 var segment_create_distance = 400 #How far away to deterime segment neccessity
-var segment_despawn_distance = 20 #How far past to remove old segments
+var segment_despawn_distance = 40 #How far past to remove old segments (Should be long enough for SFX...)
 var segment_length = 2.25
 var nodes = []
 var segments = []
@@ -42,6 +43,12 @@ var startingTransform = null
 
 var completion = 0 setget , _get_completion
 var race_over = false
+
+#Pickup spawning
+var pickup_pity_distance = 750
+var pickup_wait_distance = 400
+var pickup_distance = 0
+var pickup_spawn_rate = 0.5
 
 func _get_completion():
 	
@@ -299,6 +306,7 @@ func _create_needed_track():
 			sprite.target = _player_camera
 			new_road.add_child(dirt)
 		
+		#Spawn assorted trees
 		var make_tree = (randf() * 100) < 10
 		if make_tree:
 			var tree = treescene.instance()
@@ -306,6 +314,19 @@ func _create_needed_track():
 			sprite.target = _player_camera
 			new_road.add_child(tree)
 		
+		#Should we spawn a powerup?
+		pickup_distance += segment_length
+		var spawn_pickup = (randf() * 100) < pickup_spawn_rate
+		if (pickup_distance > pickup_wait_distance) and (spawn_pickup or pickup_distance > pickup_pity_distance):
+			#Reset the distance
+			print("PICKUP @ D :", pickup_distance)
+			pickup_distance = 0
+			
+			#Make the new pickup
+			var pickup = PickupScene.instance()
+			new_road.add_child(pickup)
+			pickup.sprite.target = _player_camera
+			
 		#TODO: Reimplement adding obstacles
 		"""
 		for remaining_obstacle in trackDefinition['obstacles']:

@@ -7,6 +7,8 @@ onready var nodescene = preload("res://objects/Track/Debug/RedNode.tscn")
 onready var blueScene = preload("res://objects/Track/Debug/BlueNode.tscn")
 onready var purpScene = preload("res://objects/Track/Debug/PurpleNode.tscn")
 onready var roadscene = preload("res://objects/Track/Road.tscn")
+onready var treescene = preload("res://scenes/caleb/Tree.tscn")
+onready var dirtscene = preload("res://scenes/caleb/Dirt.tscn")
 
 onready var trackDefinition = _generateTrackLayout()
 onready var nodes = []
@@ -100,6 +102,13 @@ func _generateObstacles(length):
 		obstaclesToPlace.append(nodescene.instance())
 		obstaclesToPlace.append(blueScene.instance())
 		obstaclesToPlace.append(purpScene.instance())
+		#var sprite = spritescene.instance()
+		#sprite.reference = get_parent().get_node("Camera").get_path()
+		#sprite.tex_closest = load("res://assets/closestLod.png")
+		#sprite.tex_lod0 = load("res://assets/lod0.png")
+		#sprite.tex_lod1 = load("res://assets/lod1.png")
+		#sprite.tex_furthest = load("res://assets/furthestLod.png")
+		#obstaclesToPlace.append(sprite)
 		numToSpawm += 3
 	
 	# Lets figure out where to put these
@@ -201,6 +210,21 @@ func _ready():
 		var currentOffset = pathNode.get_offset()
 		pathNode.set_offset(currentOffset + 2.25)
 		unitoffset = pathNode.get_unit_offset()
+		
+		# There's always a chance of having a dirt clod or tree
+		var dirtHappened = randf() * 100
+		if dirtHappened < 5:
+			var dirt = dirtscene.instance()
+			var sprite = dirt.get_node("LoDSprite")
+			sprite.reference = get_parent().get_node("Camera").get_path()
+			roadPiece.add_child(dirt)
+		
+		var treeHappened = randf() * 100
+		if treeHappened < 10:
+			var tree = treescene.instance()
+			var sprite = tree.get_node("LoDSprite")
+			sprite.reference = get_parent().get_node("Camera").get_path()
+			roadPiece.add_child(tree)
 		
 		# Add any baddies supposed to be here?
 		var baddiesToAdd = [] # list of array indices

@@ -7,6 +7,8 @@ onready var nodescene = preload("res://objects/Track/Debug/RedNode.tscn")
 onready var blueScene = preload("res://objects/Track/Debug/BlueNode.tscn")
 onready var purpScene = preload("res://objects/Track/Debug/PurpleNode.tscn")
 onready var roadscene = preload("res://objects/Track/Road.tscn")
+onready var treescene = preload("res://scenes/caleb/Tree.tscn")
+onready var dirtscene = preload("res://scenes/caleb/Dirt.tscn")
 
 onready var trackDefinition = _generateTrackLayout()
 onready var nodes = []
@@ -30,40 +32,19 @@ func _generateTrackLayout():
 	var track = {}
 	
 	var trackDefinition = []
-	#trackDefinition.append([100,0])
-	#trackDefinition.append([100,20])
-	#trackDefinition.append([100,40])
-	#trackDefinition.append([100,60])
-	#trackDefinition.append([100,80])
-	#trackDefinition.append([100,100])
-	#trackDefinition.append([100,120])
-	#trackDefinition.append([100,140])
-	#trackDefinition.append([100,160])
-	#trackDefinition.append([100,180])
-	#trackDefinition.append([100,200])
-	#trackDefinition.append([100,220])
-	#trackDefinition.append([100,240])
-	#trackDefinition.append([100,260])
-	#trackDefinition.append([100,280])
-	#trackDefinition.append([100,300])
-	#trackDefinition.append([100,320])
-	#trackDefinition.append([100,340])
-	#trackDefinition.append([100,360])
-	trackDefinition.append([100,0])
-	trackDefinition.append([100,45])
-	trackDefinition.append([100,0])
-	trackDefinition.append([100,10])
-	trackDefinition.append([100,350])
-	trackDefinition.append([100,300])
-	trackDefinition.append([100,0])
-	trackDefinition.append([100,15])
-	trackDefinition.append([100,5])
-	trackDefinition.append([100,355])
-	trackDefinition.append([100,285])
-	trackDefinition.append([100,345])
-	trackDefinition.append([75,20])
-	trackDefinition.append([75,340])
-	trackDefinition.append([100,0])
+	trackDefinition.append([400, 0])
+	trackDefinition.append([400, 45])
+	trackDefinition.append([350, 0])
+	trackDefinition.append([300, 10])
+	trackDefinition.append([300, -10])
+	trackDefinition.append([250, -10])
+	trackDefinition.append([250, 0])
+	trackDefinition.append([300, 40])
+	trackDefinition.append([350, 5])
+	trackDefinition.append([300, -15])
+	trackDefinition.append([250, -15])
+	trackDefinition.append([300, 0])
+	trackDefinition.append([350, 0])
 	track["layout"] = trackDefinition
 	
 	# Count the "length" of the track
@@ -100,6 +81,13 @@ func _generateObstacles(length):
 		obstaclesToPlace.append(nodescene.instance())
 		obstaclesToPlace.append(blueScene.instance())
 		obstaclesToPlace.append(purpScene.instance())
+		#var sprite = spritescene.instance()
+		#sprite.reference = get_parent().get_node("Camera").get_path()
+		#sprite.tex_closest = load("res://assets/closestLod.png")
+		#sprite.tex_lod0 = load("res://assets/lod0.png")
+		#sprite.tex_lod1 = load("res://assets/lod1.png")
+		#sprite.tex_furthest = load("res://assets/furthestLod.png")
+		#obstaclesToPlace.append(sprite)
 		numToSpawm += 3
 	
 	# Lets figure out where to put these
@@ -138,12 +126,14 @@ func _ready():
 	
 	# Instance a new scene and give it the same start point as the track follower/generator
 	var newNode = nodescene.instance()
-	newNode.transform.origin = self.transform.origin
+	newNode.transform.origin = self.transform.origin - Vector3(0, 0, -100)
 	
 	# Append to associated lists
 	nodes.append(newNode)
 	trackCurve.add_point(newNode.transform.origin)
 	add_child(newNode)
+	
+	var previousAnglePhi = 0
 	
 	# Create a collection of node objects to represent the layout
 	for segment in self.trackDefinition["layout"]:
@@ -157,16 +147,18 @@ func _ready():
 		# We know the hypoteneuse and the angle -- lets determine the other angles
 		
 		var radians = deg2rad(segment[1])
+		radians = previousAnglePhi + radians 
 		var dim1ToAdd = sin(radians) * segment[0]
 		var dim2ToAdd = cos(radians) * segment[0]
 		var addedAmount = Vector3(dim1ToAdd, 0, (-1) * dim2ToAdd)
 		newOrigin = newOrigin + addedAmount
+		previousAnglePhi = radians
 		
 		# Thats all we need to determine the new node position
 		# Lets also determine the bezier curve out
 		# Take our current vector and multiply it -- that will be out out vector
-		var oldInVector = (-0.50 * addedAmount)
-		var newOutVector = (0.50 * addedAmount)
+		var oldInVector = (-100 * addedAmount.normalized())
+		var newOutVector = (100 * addedAmount.normalized())
 		
 		# Create a new node and give it the same position as the old node
 		newNode = nodescene.instance()
@@ -201,6 +193,21 @@ func _ready():
 		var currentOffset = pathNode.get_offset()
 		pathNode.set_offset(currentOffset + 2.25)
 		unitoffset = pathNode.get_unit_offset()
+		
+		# There's always a chance of having a dirt clod or tree
+		var dirtHappened = randf() * 100
+		if dirtHappened < 5:
+			var dirt = dirtscene.instance()
+			var sprite = dirt.get_node("LoDSprite")
+			sprite.reference = get_parent().get_node("PlayerCamera").get_path()
+			roadPiece.add_child(dirt)
+		
+		var treeHappened = randf() * 100
+		if treeHappened < 10:
+			var tree = treescene.instance()
+			var sprite = tree.get_node("LoDSprite")
+			sprite.reference = get_parent().get_node("PlayerCamera").get_path()
+			roadPiece.add_child(tree)
 		
 		# Add any baddies supposed to be here?
 		var baddiesToAdd = [] # list of array indices

@@ -22,9 +22,15 @@ func _on_TrackFollower_position_update(new_transform):
 	for node in get_children():
 		if children_original_transforms.has(node) == false:
 			children_original_transforms[node] = node.transform
-		
 		node.transform.origin = children_original_transforms[node].origin - new_transform.origin
 	
 	# Now rotate the whole set
-	var new_rotation = new_transform.basis.get_euler()
-	self.transform.basis = original_transform.basis.rotated(Vector3(0,1,0), (-1) * new_rotation[1])
+	#rotate_y(original_transform.basis.get_euler()[1] - new_transform.basis.get_euler()[1])
+	#rotate_y(PI)
+	#var newBasis = self.transform.basis
+	#newBasis = Basis(Vectoy3(0,1,0), PI) * new_transform.basis
+	#var new_rotation = new_transform.basis.get_euler()
+	var degrees = deg2rad(new_transform.basis.get_euler()[1])
+	degrees = new_transform.basis.get_euler()[1] + (PI/4)
+	self.transform = original_transform.rotated(Vector3(0, 1, 0), (-1) * degrees)
+	pass

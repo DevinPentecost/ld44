@@ -22,12 +22,10 @@ curve = SubResource( 1 )
 rotation_mode = 1
 
 [node name="FollowTrack" type="Position3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.01, -25 )
 script = ExtResource( 2 )
 
 [node name="RotateTrack" type="Position3D" parent="."]
 editor/display_folded = true
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.01, -25 )
 script = ExtResource( 3 )
 
 [node name="Light Sources" type="Position3D" parent="RotateTrack"]
@@ -49,7 +47,6 @@ transform = Transform( -4.37114e-008, 0, 1, 0, 1, 0, -1, 0, -4.37114e-008, 0, -1
 light_energy = 0.25
 
 [node name="IgnoreTrack" type="Position3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.01, -25 )
 
 [node name="ShoulderWall" parent="." instance=ExtResource( 4 )]
 

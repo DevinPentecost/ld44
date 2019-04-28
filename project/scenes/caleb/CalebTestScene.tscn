@@ -6,16 +6,10 @@
 
 [node name="Spatial" type="Spatial"]
 
-[node name="Camera" type="Camera" parent="."]
-transform = Transform( 1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 6, 8 )
+[node name="PlayerCamera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 9.46314, 8 )
 environment = SubResource( 1 )
 current = true
-far = 200.0
-
-[node name="Camera2" type="Camera" parent="."]
-transform = Transform( 1, 0, 0, 0, -0.0197918, 0.999804, 0, -0.999804, -0.0197918, 0, 83.0548, 11.9459 )
-visible = false
-environment = SubResource( 1 )
 far = 200.0
 
 [node name="TrackFollower" parent="." instance=ExtResource( 1 )]

@@ -4,8 +4,8 @@ export(NodePath) var player
 onready var _player = get_node(player)
 
 #Adjust camera based on player turning and speed
-var camera_accelleration = 3
-var camera_pan_multiplier = 0.2 #Move this much per unit of left/right movement
+var camera_accelleration = 4
+var camera_pan_multiplier = 0.4 #Move this much per unit of left/right movement
 var camera_rise_multiplier = -0.3 #Move this much vertically based on speed
 
 #Variables related to camera shake

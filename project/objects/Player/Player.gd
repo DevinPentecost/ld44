@@ -1,5 +1,7 @@
 extends KinematicBody
 
+const BloodParticle = preload("res://objects/Player/BloodParticle/BloodParticle.tscn")
+
 signal player_died
 signal player_force_brake(start)
 
@@ -7,6 +9,8 @@ signal player_force_brake(start)
 onready var _idle_engine_player = $IdleEngine
 onready var _boost_engine_player = $BoostEngine
 onready var _scrape_player = $ScrapePlayer
+onready var _smoke_particles = $SmokeParticles
+onready var _brake_timer = $BrakeTimer
 
 #What is the current movement state
 class MovementState:
@@ -69,9 +73,9 @@ var health_loss =  3.5 #Health loss per second
 
 
 #Turning speeds
-var turn_speed = 10 #Left and right movement per second normally
-var turn_boost_speed = 6
-var turn_brake_speed = 3
+var turn_speed = 15 #Left and right movement per second normally
+var turn_boost_speed = 13
+var turn_brake_speed = 9
 var current_turn_speed = 0
 
 #Forward speed things
@@ -137,6 +141,12 @@ func _physics_process(delta):
 	
 	#Handle engine sounds
 	_process_engine_sfx(delta)
+	
+	#Handle particles
+	_process_particles(delta)
+	
+	#Handle the brake timer
+	_process_brake_timer(delta)
 
 func _process_movement_forward(delta):
 	if not is_alive:
@@ -271,7 +281,6 @@ func _process_engine_sfx(delta):
 	#Change idle pitch based on speed
 	var idle_pitch_weight = current_speed/max_idle_pitch_speed
 	var idle_pitch = lerp(min_idle_pitch, max_idle_pitch, idle_pitch_weight)
-	print(current_speed, idle_pitch)
 	_idle_engine_player.pitch_scale = idle_pitch
 	
 	#Are we boosting?
@@ -281,6 +290,23 @@ func _process_engine_sfx(delta):
 	else:
 		if movement_state.is_boosting():
 			_boost_engine_player.playing = true
+
+func _process_particles(delta):
+	
+	#Smoke speed depends on player speed
+	_smoke_particles.initial_velocity = current_speed
+
+func _process_brake_timer(delta):
+	
+	#Is the timer currently running
+	if _brake_timer.is_stopped():
+		#Restart it if braking
+		if movement_state.is_braking():
+			_brake_timer.start()
+	else:
+		#Are we no longer braking?
+		if not movement_state.is_braking():
+			_brake_timer.stop()
 
 func _unhandled_key_input(event):
 	
@@ -351,3 +377,14 @@ func _on_TrackFollower_turning(turn_amount):
 	#Slide the player that much
 	movement_state.slide = turn_amount * -300
 	
+
+
+func _on_BrakeTimer_timeout():
+	
+	#The brake timer needs to keep going
+	_brake_timer.start()
+	
+	#Spawn a new blood boy
+	var blood_particle = BloodParticle.instance()
+	add_child(blood_particle)
+

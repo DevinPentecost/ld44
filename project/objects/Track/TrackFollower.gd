@@ -296,15 +296,15 @@ func _create_needed_track():
 		if make_dirt:
 			var dirt = dirtscene.instance()
 			var sprite = dirt.get_node("LoDSprite")
-			sprite.reference = player_camera
-			#new_road.add_child(dirt)
+			sprite.target = _player_camera
+			new_road.add_child(dirt)
 		
 		var make_tree = (randf() * 100) < 10
 		if make_tree:
 			var tree = treescene.instance()
 			var sprite = tree.get_node("LoDSprite")
-			sprite.reference = _player_camera
-			#new_road.add_child(tree)
+			sprite.target = _player_camera
+			new_road.add_child(tree)
 		
 		#TODO: Reimplement adding obstacles
 		"""

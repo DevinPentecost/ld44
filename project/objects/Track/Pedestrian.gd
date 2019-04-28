@@ -4,6 +4,7 @@ extends Area
 class PedestrianSpawn:
 	var track_segment =  0
 	var start_position = 0.5
+	var start_depth = 0.5
 	var move_speed = -5
 	var health_change = -15
 	var speed_change = -7
@@ -27,11 +28,7 @@ func apply_pedestrian_spawn(pedestrian_spawn):
 	speed_change = pedestrian_spawn.speed_change
 	is_powerup = pedestrian_spawn.is_powerup
 	
-	#Adjust position, we should already be relative to parent
-	var start_x = (pedestrian_spawn.start_position - 1) * 5
-	transform.origin.x = start_x
-	
-	
+	#Position should be adjusted by the parent!
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/tree_furthest.bmp-87e86ed18051f3a43868af9753ba4aac.stex"
+path="res://.import/chainthing.png-f4fd3f8949d354be8c8de41262448214.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/2d/tree_furthest.bmp"
-dest_files=[ "res://.import/tree_furthest.bmp-87e86ed18051f3a43868af9753ba4aac.stex" ]
+source_file="res://assets/2d/chainthing.png"
+dest_files=[ "res://.import/chainthing.png-f4fd3f8949d354be8c8de41262448214.stex" ]
 
 [params]
 

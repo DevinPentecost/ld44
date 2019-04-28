@@ -26,20 +26,20 @@ func _process(delta):
 		$TimerLabel.text = time_stamp
 		
 		
-		if brake_state != $Player.movement_state.is_braking():
-			brake_state = !brake_state
-			var fuel_angle = $FuelMeter.rect_rotation
-			_tween.stop_all()
-			if brake_state:
-				_tween.interpolate_property($FuelMeter, "rect_rotation", fuel_angle, 27, 0.1, Tween.TRANS_QUAD, Tween.EASE_OUT)
-			else:
-				_tween.interpolate_property($FuelMeter, "rect_rotation", fuel_angle ,0, 0.1, Tween.TRANS_QUAD, Tween.EASE_OUT)
-			_tween.start()
+	if brake_state != $Player.movement_state.is_braking():
+		brake_state = !brake_state
+		var fuel_angle = $FuelMeter.rect_rotation
+		_tween.stop_all()
+		if brake_state:
+			_tween.interpolate_property($FuelMeter, "rect_rotation", fuel_angle, 27, 0.1, Tween.TRANS_QUAD, Tween.EASE_OUT)
+		else:
+			_tween.interpolate_property($FuelMeter, "rect_rotation", fuel_angle ,0, 0.1, Tween.TRANS_QUAD, Tween.EASE_OUT)
+		_tween.start()
 			
 		
 	#TEST TO END GAME EARLY
-	#if time > 11 and finish_time == 0:
-	#	_end_race()
+	if time > 3 and finish_time == 0:
+		_end_race()
 
 
 func _start_race():
@@ -54,14 +54,14 @@ func _end_race():
 	#Let the player know they won
 	
 	#Hide game-time UI elements
-	_tween.interpolate_property($Progress, "rect_position.x", $Progress.rect_position.x, -100, 1, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	#_tween.interpolate_property($Progress, "rect_position.x", $Progress.rect_position.x, -100, 1, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	
 	
 	#Show leaderboard info, let player submit
-	$WinScreen.visible = true
+	#$WinScreen.visible = true
 	
-	
-	_tween.interpolate_property($WinScreen, "rect_position", Vector2(0,0), Vector2(0,400), 1, Tween.TRANS_QUAD,Tween.EASE_OUT)
+	_tween.stop_all()
+	_tween.interpolate_property($WinScreen, "rect_position.y", $WinScreen.rect_position.y, $WinScreen.rect_position.y + 724, 0.5, Tween.TRANS_QUAD,Tween.TRANS_BOUNCE)
 	_tween.start()
 	
 	#Lock camera, move player off screen
@@ -84,16 +84,16 @@ func _on_Player_player_force_brake(start):
 
 
 func _on_SubmitScore_button_up():
-	var submitName = $WinScreen/SubmitName.text
+	var submitName = $WinScreen/WinBG/SubmitName.text
 	if submitName == '':
 		submitName = 'Anon'
 	var submitTime = finish_time
 	var submitURL = "http://dreamlo.com/lb/BgYO9QhznU6z2dnGdcOcPQBcrAlcquwUyP5iKXLKk4vg/add/" + submitName + "/0/" + str(submitTime) + "/"
 	$WinScreen/HTTPRequest.request(submitURL, PoolStringArray([]),false)
 	
-	$WinScreen/SubmitMsg.text = "TIME SUBMITTED"
-	$WinScreen/SubmitName.hide()
-	$WinScreen/SubmitScore.hide()
+	$WinScreen/WinBG/SubmitScore.text = "TIME SUBMITTED"
+	$WinScreen/WinBG/SubmitName.hide()
+	$WinScreen/WinBG/SubmitScore.disabled = true
 
 
 func _on_ViewLB_button_up():

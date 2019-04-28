@@ -1,8 +1,7 @@
 extends Spatial
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+#The offset this tree was made at
+var offset = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

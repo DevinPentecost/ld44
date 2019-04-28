@@ -6,6 +6,7 @@ extends Position3D
 
 var original_transform
 var children_original_transforms = {}
+onready var _sections = $Sections
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -15,14 +16,30 @@ func _ready():
 #func _process(delta):
 #	pass
 
-
+func add_section(road_node):
+	
+	#Add it to the sections boy
+	_sections.add_child(road_node)
+	
+func get_sections():
+	
+	#Get them from the child
+	var sections = _sections.get_children()
+	return sections
 
 func _on_TrackFollower_position_update(new_transform):
+	
+	"""
 	# First, adjust the origin of every child node to compensate for movement
 	for node in get_children():
 		if children_original_transforms.has(node) == false:
 			children_original_transforms[node] = node.transform
 		node.transform.origin = children_original_transforms[node].origin - new_transform.origin
+	"""
+	
+	#Adjust our origin
+	_sections.transform.origin = -new_transform.origin
+	
 	
 	# Now rotate the whole set
 	#rotate_y(original_transform.basis.get_euler()[1] - new_transform.basis.get_euler()[1])
@@ -34,3 +51,4 @@ func _on_TrackFollower_position_update(new_transform):
 	degrees = new_transform.basis.get_euler()[1]
 	self.transform = original_transform.rotated(Vector3(0, 1, 0), (-1) * degrees)
 	pass
+	

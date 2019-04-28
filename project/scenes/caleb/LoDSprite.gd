@@ -5,6 +5,7 @@ extends Sprite3D
 # var b = "text"
 
 export(NodePath) var reference
+var target = null
 export(Texture) var tex_furthest
 export(Texture) var tex_lod0
 export(Texture) var tex_lod1
@@ -20,7 +21,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	var targetNode = get_node(reference)
+	var targetNode = target
 	# Get the distance from this node and the reference node
 	var targetLocation = targetNode.get_global_transform().origin
 	var selfLoacation = self.get_global_transform().origin

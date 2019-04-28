@@ -10,6 +10,8 @@ var SegmentScene = preload("res://objects/Track/Segment/Segment.tscn")
 
 export(NodePath) var player
 onready var _player = get_node(player)
+export(NodePath) var player_camera
+onready var _player_camera = get_node(player_camera)
 
 onready var nodescene = preload("res://objects/Track/Debug/RedNode.tscn")
 onready var blueScene = preload("res://objects/Track/Debug/BlueNode.tscn")
@@ -19,14 +21,21 @@ onready var treescene = preload("res://scenes/caleb/Tree.tscn")
 onready var dirtscene = preload("res://scenes/caleb/Dirt.tscn")
 
 onready var trackDefinition = _generateTrackLayout()
-onready var nodes = []
+var unused_segments = []
+var next_generate_offset = 0.001
+var segment_create_distance = 400 #How far away to deterime segment neccessity
+var segment_despawn_distance = 20 #How far past to remove old segments
+var segment_length = 2.25
+var nodes = []
 var segments = []
 onready var trackDemo = nodescene.instance()
 
+var is_paused = false
 
-
+onready var _path = $trackPath
 onready var pathNode = $trackPath/PathFollow
 onready var _follow_track = $FollowTrack
+onready var _progress_follow = $trackPath/ProgressFollow
 
 var old_rotation = 0
 var startingTransform = null
@@ -61,7 +70,7 @@ func _generateTrackLayout():
 	
 	#Generate a track
 	var tracks = []
-	var track_length = 50
+	var track_length = 5 #50
 	var total_angle = 0
 	for track_index in range(track_length):
 		
@@ -154,160 +163,196 @@ func _generate_pedestrians(length):
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var trackCurve = Curve3D.new()
-	var currentNode = 0
 	
-	# Instance a new scene and give it the same start point as the track follower/generator
-	var newNode = nodescene.instance()
-	newNode.transform.origin = self.transform.origin - Vector3(0, 0, -100)
+	_build_curve()
 	
-	# Append to associated lists
-	nodes.append(newNode)
-	trackCurve.add_point(newNode.transform.origin)
-	add_child(newNode)
-	
-	var previousAnglePhi = 0
-	
-	# Create a collection of node objects to represent the layout
-	for segment in self.trackDefinition["layout"]:
-		# Move to the next node
-		currentNode += 1
-		
-		# We want to start with the same origin point as the previous node
-		var oldOrigin = nodes[currentNode - 1].transform.origin
-		var newOrigin = oldOrigin
-		
-		# We know the hypoteneuse and the angle -- lets determine the other angles
-		
-		var radians = deg2rad(segment[1])
-		radians = previousAnglePhi + radians 
-		var dim1ToAdd = sin(radians) * segment[0]
-		var dim2ToAdd = cos(radians) * segment[0]
-		var addedAmount = Vector3(dim1ToAdd, 0, (-1) * dim2ToAdd)
-		newOrigin = newOrigin + addedAmount
-		previousAnglePhi = radians
-		
-		# Thats all we need to determine the new node position
-		# Lets also determine the bezier curve out
-		# Take our current vector and multiply it -- that will be out out vector
-		var oldInVector = (-100 * addedAmount.normalized())
-		var newOutVector = (100 * addedAmount.normalized())
-		
-		# Create a new node and give it the same position as the old node
-		newNode = nodescene.instance()
-		newNode.transform.origin = newOrigin
-		
-		# Apply this node to the scene
-		nodes.append(newNode)
-		add_child(newNode)
-		
-		# My new node's curve input should be a continuation of my current angle!
-		trackCurve.add_point(newNode.transform.origin, (-1) * newOutVector, newOutVector)
-		
-		# The previous node's curve input is also a form of continuation of my current angle
-		var index_of_previous = trackCurve.get_point_count() - 1
-		trackCurve.set_point_in(index_of_previous, oldInVector)
-		
 	
 	# Generate a path from this curve
-	self.get_node("trackPath").set_curve(trackCurve)
+	self.get_node("trackPath")
 	pathNode.add_child(trackDemo)
 	pathNode.set_offset(0)
 	startingTransform = pathNode.transform
-	
-	# Create "road" scenes througought the path
-	var unitoffset = pathNode.get_unit_offset()
-	while (unitoffset) < 1:
-		# Create a road scene and add
-		var roadPiece = roadscene.instance()
-		roadPiece.transform = pathNode.transform
-		_follow_track.add_child(roadPiece)
-		
-		var currentOffset = pathNode.get_offset()
-		pathNode.set_offset(currentOffset + 2.25)
-		unitoffset = pathNode.get_unit_offset()
-		
-		# There's always a chance of having a dirt clod or tree
-		var dirtHappened = randf() * 100
-		if dirtHappened < 5:
-			var dirt = dirtscene.instance()
-			var sprite = dirt.get_node("LoDSprite")
-			sprite.reference = get_parent().get_node("PlayerCamera").get_path()
-			roadPiece.add_child(dirt)
-		
-		var treeHappened = randf() * 100
-		if treeHappened < 10:
-			var tree = treescene.instance()
-			var sprite = tree.get_node("LoDSprite")
-			sprite.reference = get_parent().get_node("PlayerCamera").get_path()
-			roadPiece.add_child(tree)
-		
-		# Add any baddies supposed to be here?
-		var baddiesToAdd = [] # list of array indices
-		for currObstacle in self.trackDefinition["obstacles"]:
-			if currObstacle[0] <= currentOffset:
-				# Add this baddy to the road segment
-				baddiesToAdd.append(self.trackDefinition["obstacles"].find(currObstacle))
-		
-		
-		
-		# Start popping from the list!
-		var baddiesPopped = 0
-		for baddie in baddiesToAdd:
-			var element = self.trackDefinition["obstacles"][baddie - baddiesPopped]
-			self.trackDefinition["obstacles"].remove(baddie - baddiesPopped)
-			baddiesPopped += 1
-			
-			var obstacleScene = element[1]
-			obstacleScene.transform.origin = Vector3(0, 0.25, 0)
-			obstacleScene.show()
-			roadPiece.add_child(obstacleScene)
-			
-	
-	#Go through each pedestrian
-	var all_track_nodes = _follow_track.get_children()
-	for pedestrian_spawn in trackDefinition['pedestrians']:
-		
-		#Make a new pedestrian
-		var new_pedestrian = PedestrianScene.instance()
-		
-		#Apply variables from the spawn
-		new_pedestrian.apply_pedestrian_spawn(pedestrian_spawn)
-		
-		#Give it to the correct node
-		var track_node = all_track_nodes[pedestrian_spawn.track_segment]
-		track_node.add_child(new_pedestrian)
 	
 	# Reset the path
 	pathNode.set_offset(0)
 	pathNode.transform = startingTransform
 	
+	#Set the progress follower
+	_progress_follow.set_offset(0)
+	_progress_follow.transform = startingTransform
+
+func _build_curve():
+	
+	#Make a new curve
+	var track_curve = Curve3D.new()
+	
+	# Instance a new scene and give it the same start point as the track follower/generator
+	var start_track = nodescene.instance()
+	start_track.transform.origin = transform.origin - Vector3(0, 0, -100)
+	
+	# Append to associated lists
+	nodes.append(start_track)
+	track_curve.add_point(start_track.transform.origin)
+	add_child(start_track)
+	
+	#Start making segments shooting off
+	var segments = trackDefinition['layout']
+	var previous_angle = 0
+	var segment_count = segments.size()
+	for segment_index in range(segment_count):
+		
+		#Get the segment
+		var segment = segments[segment_index]
+		
+		# We want to start with the same origin point as the previous node
+		var old_origin = track_curve.get_point_position(segment_index)
+		var new_origin = old_origin
+		
+		# We know the hypoteneuse and the angle -- lets determine the other angles
+		
+		var radians = deg2rad(segment[1])
+		radians += previous_angle
+		var dim1ToAdd = sin(radians) * segment[0]
+		var dim2ToAdd = cos(radians) * segment[0]
+		
+		#Offset based on previous
+		var add_amount = Vector3(dim1ToAdd, 0, (-1) * dim2ToAdd)
+		new_origin = new_origin + add_amount
+		previous_angle = radians
+		
+		# Thats all we need to determine the new node position
+		# Lets also determine the bezier curve out
+		# Take our current vector and multiply it -- that will be out out vector
+		var old_in = (-100 * add_amount.normalized())
+		var new_out = (100 * add_amount.normalized())
+		
+		# My new node's curve input should be a continuation of my current angle!
+		track_curve.add_point(new_origin, (-1) * new_out, new_out)
+		
+		# The previous node's curve input is also a form of continuation of my current angle
+		var index_of_previous = track_curve.get_point_count() - 1
+		track_curve.set_point_in(index_of_previous, old_in)
+	
+	_path.set_curve(track_curve)
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	
-	# Are we looping?
-	if pathNode.get_unit_offset() > 1:
-		pathNode.set_offset(0)
-		pathNode.transform = startingTransform
+	_process_movement(delta)
+
 	
+	#Create nodes as needed so we aren't making too many
+	_create_needed_track()
 	
-	var currentOffset = pathNode.get_offset()
+	#Remove nodes as needed so we aren't making too many
+	_remove_old_track()
 	
-	var speed_adjust = 10 + _player.current_speed * 4
-	pathNode.set_offset(currentOffset + (delta * speed_adjust))
-	emit_signal("position_update", pathNode.transform)
-	
-	var new_rotation = pathNode.transform.basis.get_euler()
+	var new_rotation = _progress_follow.transform.basis.get_euler()
 	var turn_amount = old_rotation - new_rotation[1]
 	old_rotation = new_rotation[1]
 	emit_signal("turning", turn_amount)
 	
 	#Are we close to the end?
-	if pathNode.unit_offset >= 0.98:
+	if _progress_follow.unit_offset >= 0.98:
 		#We should play an end cinematic and stuff
 		emit_signal("track_completed")
 		race_over = true
 		
 		set_process(false)
+
+func _process_movement(delta):
+	#Move the progress follower up
+	var current_offset = _progress_follow.get_offset()
+	var speed_adjust = 10 + _player.current_speed * 4
+	speed_adjust = 50
 	
+	var new_offset = current_offset + (delta * speed_adjust)
+	_progress_follow.set_offset(new_offset)
+	emit_signal("position_update", _progress_follow.transform)
+
+func _create_needed_track():
+	
+	#Where are we at?
+	var current_offset = _progress_follow.get_offset()
+	
+	#Step from the previous offset to the current
+	while next_generate_offset < current_offset + segment_create_distance:
+		
+		#Did we go too far?
+		var transform_1 = pathNode.transform
+		pathNode.offset = next_generate_offset
+		transform_1 = pathNode.transform
+		if pathNode.unit_offset >= 1:
+			break		
+		
+		#Make one at this offset
+		var new_road = roadscene.instance()
+		new_road.transform = pathNode.transform
+		new_road.offset = next_generate_offset
+		_follow_track.add_section(new_road)
+		
+		#Do we need to add any doodads?
+		var make_dirt = (randf() * 100) < 5
+		if make_dirt:
+			var dirt = dirtscene.instance()
+			var sprite = dirt.get_node("LoDSprite")
+			sprite.reference = player_camera
+			#new_road.add_child(dirt)
+		
+		var make_tree = (randf() * 100) < 10
+		if make_tree:
+			var tree = treescene.instance()
+			var sprite = tree.get_node("LoDSprite")
+			sprite.reference = _player_camera
+			#new_road.add_child(tree)
+		
+		#TODO: Reimplement adding obstacles
+		"""
+		for remaining_obstacle in trackDefinition['obstacles']:
+			if remaining_obstacle[0] <= next_generate_offset:
+				#Make a new 
+		"""
+		
+		#TODO: Reimplement pedestrians
+		"""
+		#Go through each pedestrian
+		var all_track_nodes = _follow_track.get_children()
+		for pedestrian_spawn in trackDefinition['pedestrians']:
+		
+			#Make a new pedestrian
+			var new_pedestrian = PedestrianScene.instance()
+		
+			#Apply variables from the spawn
+			new_pedestrian.apply_pedestrian_spawn(pedestrian_spawn)
+		
+			#Give it to the correct node
+			var track_node = all_track_nodes[pedestrian_spawn.track_segment]
+			track_node.add_child(new_pedestrian)
+		"""
+		
+		#Take a step forward
+		next_generate_offset += segment_length
+		
+	
+	#We're done for this frame
+	pass
+	return
+
+
+func _remove_old_track():
+	
+	#How far back to remove?
+	var current_offset = _progress_follow.offset
+	var remove_offset = current_offset - segment_despawn_distance
+	
+	#Go through all track
+	for track in _follow_track.get_sections():
+		
+		#Is this child too near?
+		if track.offset >= remove_offset:
+			break
+		
+		#It's too far, remove it
+		track.queue_free()
+

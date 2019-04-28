@@ -66,6 +66,8 @@ class CollisionState:
 
 var collision_state = CollisionState.new()
 
+var is_paused = false
+
 #Player health
 var is_alive = true
 var max_health = 100

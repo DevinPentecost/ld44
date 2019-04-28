@@ -17,7 +17,7 @@ func _ready():
 func _process(delta):
 	
 	#Update timer
-	if finish_time > 0:
+	if finish_time == 0:
 		time += delta
 		var minutes = time/60
 		var seconds = int(round(time))%60
@@ -68,11 +68,11 @@ func _on_SubmitScore_button_up():
 	var submitName = $WinScreen/SubmitName.text
 	if submitName == '':
 		submitName = 'Anon'
-	var submitScore = time
-	var submitURL = "http://dreamlo.com/lb/BgYO9QhznU6z2dnGdcOcPQBcrAlcquwUyP5iKXLKk4vg/add/" + submitName + "/" + str(submitScore) + "/"
+	var submitTime = finish_time
+	var submitURL = "http://dreamlo.com/lb/BgYO9QhznU6z2dnGdcOcPQBcrAlcquwUyP5iKXLKk4vg/add/" + submitName + "/0/" + str(submitTime) + "/"
 	$WinScreen/HTTPRequest.request(submitURL, PoolStringArray([]),false)
 	
-	$WinScreen/SubmitMsg.text = "SCORE SUBMITTED"
+	$WinScreen/SubmitMsg.text = "TIME SUBMITTED"
 	$WinScreen/SubmitName.hide()
 	$WinScreen/SubmitScore.hide()
 

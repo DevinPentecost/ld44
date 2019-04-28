@@ -1,13 +1,10 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://objects/Player/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://objects/PlayerCamera/PlayerCamera.tscn" type="PackedScene" id=2]
 [ext_resource path="res://objects/Track/TrackFollower.tscn" type="PackedScene" id=3]
-[ext_resource path="res://assets/2d/fuel_back.png" type="Texture" id=4]
-[ext_resource path="res://assets/2d/fuel_msg.png" type="Texture" id=5]
-[ext_resource path="res://assets/2d/fuel_bar.png" type="Texture" id=6]
-[ext_resource path="res://assets/2d/fuel_top.png" type="Texture" id=7]
-[ext_resource path="res://assets/2d/skybox.png" type="Texture" id=8]
+[ext_resource path="res://objects/UI/FuelMeter.tscn" type="PackedScene" id=4]
+[ext_resource path="res://assets/2d/skybox.png" type="Texture" id=5]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Spatial
@@ -55,7 +52,7 @@ func _on_Player_player_force_brake(start):
 "
 
 [sub_resource type="PanoramaSky" id=2]
-panorama = ExtResource( 8 )
+panorama = ExtResource( 5 )
 
 [sub_resource type="Environment" id=3]
 background_mode = 2
@@ -97,61 +94,18 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
 
 [node name="PlayerCamera" parent="." instance=ExtResource( 2 )]
 transform = Transform( 1, 0, 0, 0, 0.951267, 0.30837, 0, -0.30837, 0.951267, 0, 8.91796, 7.8423 )
-far = 300.0
-target = NodePath("../CameraTarget")
 player = NodePath("../Player")
 
 [node name="TrackFollower" parent="." instance=ExtResource( 3 )]
 
 [node name="UI" type="Control" parent="."]
+editor/display_folded = true
 margin_left = 1.10803
 margin_top = 110.805
 margin_right = 1030.11
 margin_bottom = 716.805
 
-[node name="FuelMeter" type="Control" parent="UI"]
-margin_left = -14.1503
-margin_top = 367.751
-margin_right = 385.85
-margin_bottom = 767.751
-rect_min_size = Vector2( 400, 0 )
-rect_scale = Vector2( 2, 2 )
-
-[node name="FuelBot" type="TextureRect" parent="UI/FuelMeter"]
-margin_left = 7.25507
-margin_top = -36.2776
-margin_right = 519.255
-margin_bottom = 475.722
-rect_scale = Vector2( 0.307933, 0.307933 )
-texture = ExtResource( 4 )
-
-[node name="FuelMsg" type="TextureRect" parent="UI/FuelMeter"]
-margin_left = 12.9471
-margin_top = -27.5255
-margin_right = 524.947
-margin_bottom = 484.475
-rect_scale = Vector2( 0.284519, 0.284519 )
-texture = ExtResource( 5 )
-
-[node name="FuelBar" type="TextureProgress" parent="UI/FuelMeter"]
-margin_left = 70.0
-margin_top = -3.0
-margin_right = 180.0
-margin_bottom = 214.0
-rect_scale = Vector2( 0.255097, 0.312515 )
-texture_progress = ExtResource( 6 )
-fill_mode = 3
-
-[node name="FuelTop" type="TextureRect" parent="UI/FuelMeter"]
-margin_left = 7.25507
-margin_top = -36.2776
-margin_right = 519.255
-margin_bottom = 475.722
-rect_scale = Vector2( 0.307933, 0.307933 )
-texture = ExtResource( 7 )
-__meta__ = {
-"_edit_lock_": true
-}
+[node name="FuelMeter" parent="UI" instance=ExtResource( 4 )]
 
 [node name="CameraTarget" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.26741, -4.13499 )

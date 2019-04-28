@@ -50,6 +50,5 @@ light_energy = 0.25
 
 [node name="ShoulderWall" parent="." instance=ExtResource( 4 )]
 
-[connection signal="position_update" from="." to="FollowTrack" method="_on_TrackFollower_position_update"]
 [connection signal="position_update" from="." to="RotateTrack" method="_on_TrackFollower_position_update"]
-[connection signal="turning" from="." to="ShoulderWall" method="_on_TrackFollower_turning"]
+[connection signal="position_update" from="." to="FollowTrack" method="_on_TrackFollower_position_update"]

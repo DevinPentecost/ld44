@@ -1,8 +1,15 @@
 extends Position3D
 
+signal position_update(new_transform)
+signal turning(turn_amount)
+signal track_completed
+
 var PedestrianSpawn = preload("res://objects/Track/Pedestrian.gd").PedestrianSpawn
 var PedestrianScene = preload("res://objects/Track/Pedestrian.tscn")
 var SegmentScene = preload("res://objects/Track/Segment/Segment.tscn")
+
+export(NodePath) var player
+onready var _player = get_node(player)
 
 onready var nodescene = preload("res://objects/Track/Debug/RedNode.tscn")
 onready var blueScene = preload("res://objects/Track/Debug/BlueNode.tscn")
@@ -16,10 +23,7 @@ onready var nodes = []
 var segments = []
 onready var trackDemo = nodescene.instance()
 
-signal position_update(new_transform)
-signal turning(turn_amount)
 
-export var speed = 30
 
 onready var pathNode = $trackPath/PathFollow
 onready var _follow_track = $FollowTrack
@@ -27,8 +31,13 @@ onready var _follow_track = $FollowTrack
 var old_rotation = 0
 var startingTransform = null
 
+var completion = 0 setget , _get_completion
+var race_over = false
 
-
+func _get_completion():
+	
+	#Ask the path how far we are
+	return pathNode.unit_offset
 
 # Produces a track layout, which is an object.
 # The layout has a dictionary of information
@@ -68,7 +77,6 @@ func _generateTrackLayout():
 		#Accommodate angle so we can't go backwards...
 		total_angle += direction
 		if abs(total_angle) > 100:
-			print("FLOP")
 			direction -= total_angle
 			total_angle = 0
 		
@@ -277,6 +285,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	
 	# Are we looping?
 	if pathNode.get_unit_offset() > 1:
 		pathNode.set_offset(0)
@@ -285,7 +294,7 @@ func _process(delta):
 	
 	var currentOffset = pathNode.get_offset()
 	
-	var speed_adjust = 10 + speed * 4
+	var speed_adjust = 10 + _player.current_speed * 4
 	pathNode.set_offset(currentOffset + (delta * speed_adjust))
 	emit_signal("position_update", pathNode.transform)
 	
@@ -293,4 +302,12 @@ func _process(delta):
 	var turn_amount = old_rotation - new_rotation[1]
 	old_rotation = new_rotation[1]
 	emit_signal("turning", turn_amount)
+	
+	#Are we close to the end?
+	if pathNode.unit_offset >= 0.98:
+		#We should play an end cinematic and stuff
+		emit_signal("track_completed")
+		race_over = true
+		
+		set_process(false)
 	

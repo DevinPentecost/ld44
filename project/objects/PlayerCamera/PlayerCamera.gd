@@ -1,7 +1,9 @@
-extends InterpolatedCamera
+extends Camera
 
 export(NodePath) var player
 onready var _player = get_node(player)
+export(NodePath) var target
+onready var _target = get_node(target)
 
 #Adjust camera based on player turning and speed
 var camera_accelleration = 4
@@ -20,7 +22,8 @@ var shake_persistence_multiplier = 0.0035
 
 var target_position = null
 var default_position = null
-
+var cinematic = false #Is it being controlled somewhere else?
+var debug = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -45,6 +48,10 @@ func _refresh_noise(player_speed):
 
 func _process(delta):
 	
+	#Is it cinematic?
+	if cinematic:
+		return
+	
 	#Grab speed from the player
 	var player_speed = _player.current_speed
 	_refresh_noise(player_speed)
@@ -53,11 +60,12 @@ func _process(delta):
 	
 	
 	#Set up shake noise
-	var debug_image = shake_noise.get_seamless_image(100)
-	var image_texture = ImageTexture.new()
-	image_texture.create_from_image(debug_image)
-	$Sprite3D.texture = image_texture
-	pass
+	if debug:
+		var debug_image = shake_noise.get_seamless_image(100)
+		var image_texture = ImageTexture.new()
+		image_texture.create_from_image(debug_image)
+		$Sprite3D.texture = image_texture
+	
 	
 func _process_camera(delta):
 	
@@ -81,3 +89,7 @@ func _process_camera(delta):
 	
 	#Finally, take this position
 	transform.origin = final_position
+	
+	#Point towards our target
+	#TODO
+	

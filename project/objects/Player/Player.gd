@@ -95,7 +95,7 @@ var health_loss_boost = 4.5 #Health loss per second
 
 #Brake stuff
 var speed_brake = 3
-var acceleration_brake = -9
+var acceleration_brake = -12
 var health_loss_brake = -15 #Health recovered per second
 
 #SFX
@@ -387,7 +387,7 @@ func hit_wall(wall, enter):
 func _on_TrackFollower_turning(turn_amount):
 	
 	#Slide the player that much
-	movement_state.slide = turn_amount * -500
+	movement_state.slide = turn_amount * -300
 	
 
 

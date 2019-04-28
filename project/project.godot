@@ -16,6 +16,7 @@ _global_script_class_icons={
 [application]
 
 config/name="ld44"
+run/main_scene="res://scenes/MainGame.tscn"
 config/icon="res://icon.png"
 
 [display]

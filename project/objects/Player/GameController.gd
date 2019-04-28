@@ -11,12 +11,20 @@ func _ready():
 	
 	set_process(true)
 	
+	
 	pass # Replace with function body.
 
 func _process(delta):
 	
 	#Update timer
-	time += delta
+	if finish_time > 0:
+		time += delta
+		var minutes = time/60
+		var seconds = int(round(time))%60
+		var time_stamp = "%02d : %02d" % [minutes, seconds]
+		$TimerLabel.text = time_stamp
+	
+
 
 func _start_race():
 	
@@ -32,7 +40,10 @@ func _end_race():
 	#Hide game-time UI elements
 	_tween.interpolate_property($Progress, "rect_position.x", $Progress.rect_position.x, -100, 1, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	
+	
 	#Show leaderboard info, let player submit
+	$WinScreen.visible = true
+	
 	
 	#Lock camera, move player off screen
 	
@@ -51,3 +62,25 @@ func _on_Player_player_force_brake(start):
 	#Show the bloodletter
 	$Bloodletting.set_show(start)
 	pass # Replace with function body.
+
+
+func _on_SubmitScore_button_up():
+	var submitName = $WinScreen/SubmitName.text
+	if submitName == '':
+		submitName = 'Anon'
+	var submitScore = time
+	var submitURL = "http://dreamlo.com/lb/BgYO9QhznU6z2dnGdcOcPQBcrAlcquwUyP5iKXLKk4vg/add/" + submitName + "/" + str(submitScore) + "/"
+	$WinScreen/HTTPRequest.request(submitURL, PoolStringArray([]),false)
+	
+	$WinScreen/SubmitMsg.text = "SCORE SUBMITTED"
+	$WinScreen/SubmitName.hide()
+	$WinScreen/SubmitScore.hide()
+
+
+func _on_ViewLB_button_up():
+	# to update to webpage
+	OS.shell_open("http://chilidog.faith/lb/growborally")
+
+
+func _on_QuitButton_button_up():
+	get_tree().quit()

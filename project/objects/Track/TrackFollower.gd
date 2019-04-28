@@ -39,12 +39,12 @@ func _generateTrackLayout():
 	#Make some noise patterns
 	var direction_noise = OpenSimplexNoise.new()
 	direction_noise.persistence = 0.8
-	direction_noise.period = 10
-	direction_noise.octaves = 4
-	var base_direction = 20
-	var min_direction = -25
-	var max_direction = -min_height
-	var direction_deadzone = 0.5
+	direction_noise.period = 5
+	direction_noise.octaves = 5
+	var base_direction = 5
+	var min_direction = -55
+	var max_direction = -min_direction
+	var direction_deadzone = 0.1
 	
 	var distance_noise = OpenSimplexNoise.new()
 	var min_distance = 250
@@ -52,7 +52,8 @@ func _generateTrackLayout():
 	
 	#Generate a track
 	var tracks = []
-	var track_length = 100
+	var track_length = 50
+	var total_angle = 0
 	for track_index in range(track_length):
 		
 		#Figure out how far this guy goes
@@ -60,12 +61,19 @@ func _generateTrackLayout():
 		
 		#Determine which height to use
 		var direction = 0
-		var direction_weight = height_noise.get_noise_2d(track_index, 0)
+		var direction_weight = direction_noise.get_noise_2d(track_index, 0)
 		if abs(direction_weight) >= direction_deadzone:
-			direction = base_direction + lerp(min_direction, max_direction, (direction_weight + 1)
+			direction = (base_direction*abs(direction_weight)) + lerp(min_direction, max_direction, (direction_weight + 1))
+		
+		#Accommodate angle so we can't go backwards...
+		total_angle += direction
+		if abs(total_angle) > 100:
+			print("FLOP")
+			direction -= total_angle
+			total_angle = 0
 		
 		#Add this section of track
-		tracks.append([distance, height])
+		tracks.append([distance, direction])
 	
 	track["layout"] = tracks
 	track["length"] = track_length
@@ -89,7 +97,7 @@ func _generateObstacles(length):
 	# The obstacle type will have even distribution
 	# Obstacles will get more dense as the track goes on?
 	
-	var numObstacles = length / 50
+	var numObstacles = length
 	var obstaclesToPlace = []
 	
 	# Spawn a bucket of obstacles

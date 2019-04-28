@@ -278,7 +278,8 @@ func _process_health(delta):
 		
 	#Did we go under?
 	if current_health < 0:
-		
+		print(current_health)
+		current_health = 0
 		#emit_signal("player_died")
 		#is_alive = false
 		

@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/metals.ogg-c05a935c0216a0173a14f3051373d4af.oggstr"
+
+[deps]
+
+source_file="res://objects/UI/WinScreen/metals.ogg"
+dest_files=[ "res://.import/metals.ogg-c05a935c0216a0173a14f3051373d4af.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

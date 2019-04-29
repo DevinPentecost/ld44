@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://objects/Player/GameController.gd" type="Script" id=1]
 [ext_resource path="res://objects/Player/Player.tscn" type="PackedScene" id=2]
@@ -8,49 +8,12 @@
 [ext_resource path="res://assets/OpenSans-Bold.ttf" type="DynamicFontData" id=6]
 [ext_resource path="res://objects/UI/Progress.tscn" type="PackedScene" id=7]
 [ext_resource path="res://objects/UI/Bloodletting.tscn" type="PackedScene" id=8]
-[ext_resource path="res://assets/2d/chainthing.png" type="Texture" id=9]
+[ext_resource path="res://objects/UI/WinScreen/WinScreen.tscn" type="PackedScene" id=9]
 
 [sub_resource type="DynamicFont" id=1]
 size = 64
 use_filter = true
 font_data = ExtResource( 6 )
-
-[sub_resource type="StyleBoxEmpty" id=12]
-
-[sub_resource type="StyleBoxEmpty" id=2]
-
-[sub_resource type="DynamicFont" id=3]
-size = 24
-use_filter = true
-font_data = ExtResource( 6 )
-
-[sub_resource type="StyleBoxEmpty" id=4]
-
-[sub_resource type="StyleBoxEmpty" id=5]
-
-[sub_resource type="StyleBoxEmpty" id=6]
-
-[sub_resource type="StyleBoxEmpty" id=7]
-
-[sub_resource type="StyleBoxEmpty" id=8]
-
-[sub_resource type="DynamicFont" id=9]
-size = 32
-use_filter = true
-font_data = ExtResource( 6 )
-
-[sub_resource type="ProceduralSky" id=10]
-sky_top_color = Color( 0.14902, 0.223529, 0.482353, 1 )
-sky_horizon_color = Color( 0.847059, 0.694118, 0.952941, 1 )
-sky_curve = 0.0182756
-sky_energy = 0.5
-ground_horizon_color = Color( 0.423529, 0.372549, 0.388235, 1 )
-sun_latitude = 180.0
-sun_energy = 0.0
-
-[sub_resource type="Environment" id=11]
-background_mode = 2
-background_sky = SubResource( 10 )
 
 [node name="MainGame" type="Spatial"]
 script = ExtResource( 1 )
@@ -90,114 +53,14 @@ track = NodePath("../TrackFollower")
 [node name="Tween" type="Tween" parent="."]
 
 [node name="Bloodletting" parent="." instance=ExtResource( 8 )]
-visible = false
 
-[node name="WinScreen" type="Control" parent="."]
-visible = false
-margin_left = 761.0
-margin_top = -37.0
-margin_right = 1242.0
-margin_bottom = 682.0
+[node name="WinScreen" parent="." instance=ExtResource( 9 )]
+game_controller = NodePath("..")
 
-[node name="WinBG" type="TextureRect" parent="WinScreen"]
-margin_left = -74.0
-margin_top = -39.0
-margin_right = 950.0
-margin_bottom = 985.0
-rect_scale = Vector2( 0.778011, 0.778011 )
-texture = ExtResource( 9 )
-
-[node name="SubmitName" type="LineEdit" parent="WinScreen/WinBG"]
-margin_left = 356.0
-margin_top = 356.0
-margin_right = 658.0
-margin_bottom = 420.0
-custom_styles/focus = SubResource( 12 )
-custom_styles/normal = SubResource( 2 )
-custom_fonts/font = SubResource( 3 )
-align = 1
-context_menu_enabled = false
-placeholder_text = "ENTER NAME"
-placeholder_alpha = 0.62
-
-[node name="SubmitScore" type="Button" parent="WinScreen/WinBG"]
-margin_left = 373.626
-margin_top = 554.149
-margin_right = 648.626
-margin_bottom = 613.149
-custom_styles/hover = SubResource( 4 )
-custom_styles/pressed = SubResource( 5 )
-custom_styles/focus = SubResource( 6 )
-custom_styles/disabled = SubResource( 7 )
-custom_styles/normal = SubResource( 8 )
-custom_fonts/font = SubResource( 9 )
-custom_colors/font_color_hover = Color( 0.8, 0.517647, 0.517647, 1 )
-custom_colors/font_color_pressed = Color( 1, 0.298039, 0.298039, 1 )
-text = "SUBMIT SCORE"
-
-[node name="ViewLB" type="Button" parent="WinScreen/WinBG"]
-margin_left = 374.847
-margin_top = 729.982
-margin_right = 649.847
-margin_bottom = 788.982
-custom_styles/hover = SubResource( 4 )
-custom_styles/pressed = SubResource( 5 )
-custom_styles/focus = SubResource( 6 )
-custom_styles/disabled = SubResource( 7 )
-custom_styles/normal = SubResource( 8 )
-custom_fonts/font = SubResource( 9 )
-custom_colors/font_color_hover = Color( 0.8, 0.517647, 0.517647, 1 )
-custom_colors/font_color_pressed = Color( 1, 0.298039, 0.298039, 1 )
-text = "LEADERBOARD"
-
-[node name="QuitButton" type="Button" parent="WinScreen/WinBG"]
-margin_left = 372.405
-margin_top = 816.677
-margin_right = 647.405
-margin_bottom = 875.677
-custom_styles/hover = SubResource( 4 )
-custom_styles/pressed = SubResource( 5 )
-custom_styles/focus = SubResource( 6 )
-custom_styles/disabled = SubResource( 7 )
-custom_styles/normal = SubResource( 8 )
-custom_fonts/font = SubResource( 9 )
-custom_colors/font_color_hover = Color( 0.8, 0.517647, 0.517647, 1 )
-custom_colors/font_color_pressed = Color( 1, 0.298039, 0.298039, 1 )
-text = "QUIT"
-
-[node name="ReplayButton" type="Button" parent="WinScreen/WinBG"]
-margin_left = 371.184
-margin_top = 642.065
-margin_right = 646.184
-margin_bottom = 701.065
-custom_styles/hover = SubResource( 4 )
-custom_styles/pressed = SubResource( 5 )
-custom_styles/focus = SubResource( 6 )
-custom_styles/disabled = SubResource( 7 )
-custom_styles/normal = SubResource( 8 )
-custom_fonts/font = SubResource( 9 )
-custom_colors/font_color_hover = Color( 0.8, 0.517647, 0.517647, 1 )
-custom_colors/font_color_pressed = Color( 1, 0.298039, 0.298039, 1 )
-text = "REPLAY"
-
-[node name="SubmitMsg" type="Label" parent="WinScreen/WinBG"]
-visible = false
-margin_left = 7.91241
-margin_top = 813.288
-margin_right = 193.912
-margin_bottom = 834.288
-text = "awesome driving, great time!"
-
-[node name="HTTPRequest" type="HTTPRequest" parent="WinScreen"]
-
-[node name="env" type="WorldEnvironment" parent="WinScreen"]
-environment = SubResource( 11 )
-
-[connection signal="player_force_brake" from="Player" to="." method="_on_Player_player_force_brake"]
-[connection signal="track_completed" from="TrackFollower" to="Progress" method="_on_TrackFollower_track_completed"]
-[connection signal="track_completed" from="TrackFollower" to="FuelMeter" method="_on_TrackFollower_track_completed"]
+[connection signal="race_finished" from="." to="WinScreen" method="_on_MainGame_race_finished"]
+[connection signal="race_finished" from="." to="Progress" method="_on_MainGame_race_finished"]
+[connection signal="race_finished" from="." to="FuelMeter" method="_on_MainGame_race_finished"]
+[connection signal="race_finished" from="." to="Bloodletting" method="_on_MainGame_race_finished"]
+[connection signal="player_brake" from="Player" to="." method="_on_Player_player_brake"]
 [connection signal="track_completed" from="TrackFollower" to="." method="_on_TrackFollower_track_completed"]
 [connection signal="turning" from="TrackFollower" to="Player" method="_on_TrackFollower_turning"]
-[connection signal="button_up" from="WinScreen/WinBG/SubmitScore" to="." method="_on_SubmitScore_button_up"]
-[connection signal="button_up" from="WinScreen/WinBG/ViewLB" to="." method="_on_ViewLB_button_up"]
-[connection signal="button_up" from="WinScreen/WinBG/QuitButton" to="." method="_on_QuitButton_button_up"]

@@ -3,7 +3,7 @@ extends KinematicBody
 const BloodParticle = preload("res://objects/Player/BloodParticle/BloodParticle.tscn")
 
 signal player_died
-signal player_force_brake(start)
+signal player_brake(start, forced)
 
 #Grab nodes
 onready var _idle_engine_player = $IdleEngine
@@ -300,7 +300,7 @@ func _process_health(delta):
 	if current_health >= max_health:
 		current_health = min(current_health, max_health)
 		movement_state.force_brake = false
-		emit_signal("player_force_brake", false)
+		emit_signal("player_brake", false, true)
 		
 	#Did we go under?
 	if current_health < 0:
@@ -310,7 +310,7 @@ func _process_health(delta):
 		#is_alive = false
 		
 		movement_state.force_brake = true
-		emit_signal("player_force_brake", true)
+		emit_signal("player_brake", true, true)
 		
 		#TODO: Do player dead stuff
 
@@ -363,8 +363,10 @@ func _unhandled_key_input(event):
 	elif event.is_action_pressed("brake"):
 		#player_anim.play("armature|armature|braking|armature|braking")
 		movement_state.brake = true
+		emit_signal("player_brake", true, false)
 	elif event.is_action_released("brake"):
 		movement_state.brake = false
+		emit_signal("player_brake", false, false)
 
 func hit_obstacle(obstacle):
 	

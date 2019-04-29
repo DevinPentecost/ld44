@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/congrats.ogg-31e6d8b8050b7713ef8e792c5aef474d.oggstr"
+
+[deps]
+
+source_file="res://objects/UI/WinScreen/congrats.ogg"
+dest_files=[ "res://.import/congrats.ogg-31e6d8b8050b7713ef8e792c5aef474d.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

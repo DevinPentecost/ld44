@@ -19,9 +19,9 @@ func _calculate_new_horizontal_movement(factor):
 	if abs(distance_from_center) > 0.3:
 		# Too far away! Adjust movement to get closer
 		if distance_from_center < 0:
-			return 3 * factor
+			return 5 * factor
 		else:
-			return -3 * factor
+			return -5 * factor
 		
 	return 0
 	
@@ -30,9 +30,9 @@ func _calculate_new_vertical_movement(factor):
 	if abs(distance_from_center) > 0.1:
 		# Too far away! Adjust movement to get closer
 		if distance_from_center < 0:
-			return 3 * factor
+			return 5 * factor
 		else:
-			return -3 * factor
+			return -5 * factor
 		
 	return 0
 
@@ -49,8 +49,12 @@ func _process(delta):
 	vertical_movement += _calculate_new_vertical_movement(delta)
 
 func bump(magnitude):
-	horizontal_movement = magnitude
-	stunned = 1
+	if sign(horizontal_movement) == sign(magnitude):
+		horizontal_movement += magnitude
+	else:
+		horizontal_movement = magnitude
+		
+	stunned = 0.5
 
 func _on_Announcer_finished():
 	get_parent().remove_child(self)
@@ -64,11 +68,11 @@ func _on_PlayerColllider_body_exited(body):
 	if body.is_in_group("player"):
 		body.hit_opponent(self, false)
 
-
 func _on_WallCollider_body_entered(body):
 	if body.is_in_group("wall"):
 		visible = false
 		$Crash.playing = true
 		$Announcer.playing = true
-		remove_child($Area)
+		remove_child($PlayerCollider)
+		remove_child($WallCollider)
 		player.hit_pickup(self)

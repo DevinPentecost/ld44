@@ -78,7 +78,7 @@ func _generateTrackLayout():
 	
 	#Generate a track
 	var tracks = []
-	var track_length = 50 #50
+	var track_length = 1 #50
 	var total_angle = 0
 	for track_index in range(track_length):
 		

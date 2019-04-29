@@ -43,7 +43,12 @@ func _submit_score():
 	print("Submitting Score: ", player_name, " ", player_time)
 	
 	#Send the score
-	#TODO
+	# no error handling for submission failures
+	var submit_url = "http://dreamlo.com/lb/BgYO9QhznU6z2dnGdcOcPQBcrAlcquwUyP5iKXLKk4vg/add/" + player_name + "/0/" + str(player_time) + "/"	
+	$HTTPRequest.request(submit_url, PoolStringArray([]), false)
+	$WinBG/SubmitScore.text = "TIME SUBMITTED"
+	$WinBG/SubmitName.editable = true
+	$WinBG/SubmitScore.disabled = true
 
 func _on_MainGame_race_finished():
 	
@@ -68,8 +73,7 @@ func _on_SubmitScore_pressed():
 
 func _on_ViewLB_pressed():
 	#Open the leaderboard in your favorite web browser
-	#TODO: http://chilidog.faith/lb/ld44
-	pass # Replace with function body.
+	OS.shell_open("http://chilidog.faith/lb/ld44")
 
 
 func _on_QuitButton_pressed():

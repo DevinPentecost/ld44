@@ -23,6 +23,7 @@ class MovementState:
 	var force_brake = false
 	var left = false
 	var right = false
+	var locked = false
 	
 	#When the track turns, the player also slides
 	var slide = 0 #The amount to slide the player (negative is left)
@@ -69,8 +70,6 @@ class CollisionState:
 		return shoulder and not wall
 
 var collision_state = CollisionState.new()
-
-var is_paused = false
 
 #Player health
 var is_alive = true
@@ -162,7 +161,8 @@ func _physics_process(delta):
 	_process_brake_timer(delta)
 
 func _process_movement_forward(delta):
-	if not is_alive:
+	#If movement is controlled don't mess with it
+	if movement_state.locked:
 		return
 	
 	#Are we boosting or braking?
@@ -218,7 +218,8 @@ func _process_movement_forward(delta):
 	current_speed = float(current_speed)
 	
 func _process_movement_turn(delta):
-	if not is_alive:
+	#If movement is controlled don't mess with it
+	if movement_state.locked:
 		return
 	
 	#Which direction to move?
@@ -465,8 +466,6 @@ func _on_TrackFollower_turning(turn_amount):
 	else:
 		if abs(movement_state.slide) > 8:
 			_skid_sound_player.playing = true
-	
-
 
 func _on_BrakeTimer_timeout():
 	
@@ -476,6 +475,8 @@ func _on_BrakeTimer_timeout():
 	_spawn_blood()
 
 func _spawn_blood(amount=1):
+	if movement_state.locked:
+		return
 	
 	#Make 'em!
 	for blood in range(amount):
@@ -483,3 +484,15 @@ func _spawn_blood(amount=1):
 		#Spawn a new blood boy
 		var blood_particle = BloodParticle.instance()
 		add_child(blood_particle)
+		
+func sunset():
+	
+	#Drive off into the sunset!
+	movement_state.locked = true
+	
+	#Simply tween us awayyyy
+	var end_location = Vector3(0, 0, -500)
+	var duration = 5
+	$Tween.interpolate_property(self, "translation", translation, end_location, duration, Tween.TRANS_LINEAR, Tween.EASE_IN)
+	$Tween.interpolate_property(self, "scale", scale, scale * 0, duration, Tween.TRANS_QUINT, Tween.EASE_IN)
+	$Tween.start()

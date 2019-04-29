@@ -114,6 +114,8 @@ var road_pitch_shoulder = 0.5
 var road_db_shoulder = 15
 var road_tween_time = 0.25
 
+var spinning = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	
@@ -222,6 +224,10 @@ func _process_movement_turn(delta):
 	if movement_state.locked:
 		return
 	
+	#Are we busy spinning?
+	if spinning:
+		return
+	
 	#Which direction to move?
 	var movement_direction = movement_state.get_movement_direction()
 	var is_braking = movement_state.is_braking()
@@ -268,6 +274,11 @@ func _process_movement_turn(delta):
 	var movement_vector = Vector3(final_turn_speed, 0, 0)
 	
 	$CarModel.transform = start_transform.rotated(Vector3(0,1,0), (-1)*movement_vector.x)
+	
+	#Are we close enough to center the rotation?
+	var y_rotation = $CarModel.rotation_degrees[1]
+	if abs(y_rotation + 180) < 10:
+		$CarModel.rotation_degrees[1] = 180
 	
 	#Move the player left and right accordingly
 	move_and_collide(movement_vector)
@@ -378,8 +389,18 @@ func hit_obstacle(obstacle):
 	current_health -= collision_state.obstacle_health_damage
 	
 	#Play an animation for getting hit or something
-	#TODO: MAKE IT HAPPEN!
-
+	$Ouch.play()
+	player_anim.play("armature|armature|hit|armature|hit")
+	
+	var car_model = $CarModel
+	var car_rotation = car_model.rotation_degrees
+	var stop = Vector3(car_rotation.x, car_rotation.y + 360, car_rotation.z)
+	$Tween.interpolate_property(car_model, "rotation_degrees", car_rotation, stop, 0.5, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	$Tween.start()
+	spinning = true
+	yield($Tween, "tween_completed")
+	spinning = false
+	
 func hit_pickup(pickup):
 	
 	#Spawn a bunch of blood (GROSSSSSS)

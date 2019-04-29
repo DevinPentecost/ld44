@@ -48,6 +48,7 @@ rect_scale = Vector2( 0.307933, 0.307933 )
 texture = ExtResource( 4 )
 
 [node name="FuelMsg" type="TextureRect" parent="."]
+visible = false
 margin_left = 33.593
 margin_top = 77.4613
 margin_right = 545.593

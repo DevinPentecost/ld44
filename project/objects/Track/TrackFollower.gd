@@ -34,6 +34,7 @@ var segments = []
 onready var trackDemo = nodescene.instance()
 
 var is_paused = false
+var locked = true
 
 onready var _path = $trackPath
 onready var pathNode = $trackPath/PathFollow
@@ -249,28 +250,28 @@ func _build_curve():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	if !locked:
+		_process_movement(delta)
 	
-	_process_movement(delta)
-
-	
-	#Create nodes as needed so we aren't making too many
-	_create_needed_track()
-	
-	#Remove nodes as needed so we aren't making too many
-	_remove_old_track()
-	
-	var new_rotation = _progress_follow.transform.basis.get_euler()
-	var turn_amount = old_rotation - new_rotation[1]
-	old_rotation = new_rotation[1]
-	emit_signal("turning", turn_amount)
-	
-	#Are we close to the end?
-	if _progress_follow.unit_offset >= 0.98:
-		#We should play an end cinematic and stuff
-		emit_signal("track_completed")
-		race_over = true
 		
-		set_process(false)
+		#Create nodes as needed so we aren't making too many
+		_create_needed_track()
+		
+		#Remove nodes as needed so we aren't making too many
+		_remove_old_track()
+		
+		var new_rotation = _progress_follow.transform.basis.get_euler()
+		var turn_amount = old_rotation - new_rotation[1]
+		old_rotation = new_rotation[1]
+		emit_signal("turning", turn_amount)
+		
+		#Are we close to the end?
+		if _progress_follow.unit_offset >= 0.98:
+			#We should play an end cinematic and stuff
+			emit_signal("track_completed")
+			race_over = true
+			
+			set_process(false)
 
 func _process_movement(delta):
 	#Move the progress follower up

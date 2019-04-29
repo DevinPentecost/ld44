@@ -71,10 +71,10 @@ placeholder_text = "ENTER NAME"
 placeholder_alpha = 0.62
 
 [node name="SubmitScore" type="Button" parent="WinBG"]
-margin_left = 399.394
-margin_top = 554.149
-margin_right = 634.394
-margin_bottom = 599.149
+margin_left = 358.995
+margin_top = 571.902
+margin_right = 659.995
+margin_bottom = 616.902
 custom_styles/hover = SubResource( 4 )
 custom_styles/pressed = SubResource( 5 )
 custom_styles/focus = SubResource( 6 )
@@ -87,10 +87,10 @@ disabled = true
 text = "SUBMIT SCORE"
 
 [node name="ViewLB" type="Button" parent="WinBG"]
-margin_left = 400.615
-margin_top = 642.0
-margin_right = 635.615
-margin_bottom = 687.0
+margin_left = 358.0
+margin_top = 660.897
+margin_right = 662.0
+margin_bottom = 705.897
 custom_styles/hover = SubResource( 4 )
 custom_styles/pressed = SubResource( 5 )
 custom_styles/focus = SubResource( 6 )
@@ -102,10 +102,10 @@ custom_colors/font_color_pressed = Color( 1, 0.298039, 0.298039, 1 )
 text = "LEADERBOARD"
 
 [node name="QuitButton" type="Button" parent="WinBG"]
-margin_left = 398.173
-margin_top = 816.677
-margin_right = 633.173
-margin_bottom = 861.677
+margin_left = 355.0
+margin_top = 826.946
+margin_right = 665.0
+margin_bottom = 871.946
 custom_styles/hover = SubResource( 4 )
 custom_styles/pressed = SubResource( 5 )
 custom_styles/focus = SubResource( 6 )
@@ -117,10 +117,10 @@ custom_colors/font_color_pressed = Color( 1, 0.298039, 0.298039, 1 )
 text = "QUIT"
 
 [node name="ReplayButton" type="Button" parent="WinBG"]
-margin_left = 396.952
-margin_top = 730.0
-margin_right = 631.952
-margin_bottom = 775.0
+margin_left = 356.332
+margin_top = 748.04
+margin_right = 660.332
+margin_bottom = 793.04
 custom_styles/hover = SubResource( 4 )
 custom_styles/pressed = SubResource( 5 )
 custom_styles/focus = SubResource( 6 )
@@ -133,11 +133,12 @@ text = "REPLAY"
 
 [node name="SubmitMsg" type="Label" parent="WinBG"]
 visible = false
-margin_left = 7.91241
-margin_top = 813.288
-margin_right = 193.912
-margin_bottom = 834.288
-text = "awesome driving, great time!"
+margin_left = 356.021
+margin_top = 685.103
+margin_right = 660.021
+margin_bottom = 706.103
+text = "(OPENS BROWSER)"
+align = 1
 
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
 

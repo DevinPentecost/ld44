@@ -48,7 +48,7 @@ func _process(delta):
 	
 	
 func _start_race():
-	
+	$StartMenu.hide()
 	player_anim.play("armature|armature|braking|armature|braking")
 	start_state = true
 	
@@ -104,11 +104,13 @@ func _on_Player_player_brake(start, forced):
 	
 
 func _on_Button_button_up():
-	$StartMenu.hide()
+	$StartMenu/StartButton.disabled = true
+	$StartMenu/LBButton.disabled = true
 	
 	
 	$FuelMeter/Syringe/Syringe_bar.value = 100
 	$Tween.interpolate_property($FuelMeter, "rect_position", $FuelMeter.rect_position, $FuelMeter.rect_position + Vector2(200,0), 3, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	$Tween.interpolate_property($StartMenu, "modulate", Color(1,1,1,1), Color(1,1,1,0),2,Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	$Tween.start()
 	
 	
@@ -178,3 +180,5 @@ func _unhandled_key_input(event):
 		_pause(not $TrackFollower.locked)
 	
 
+func _on_LBButton_button_up():
+	OS.shell_open("http://chilidog.faith/lb/ld44")

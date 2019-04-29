@@ -21,6 +21,7 @@ onready var roadscene = preload("res://objects/Track/Road.tscn")
 onready var treescene = preload("res://scenes/caleb/Tree.tscn")
 onready var dirtscene = preload("res://objects/Track/Dirt.tscn")
 onready var opponentScene = preload("res://objects/Track/Opponent.tscn")
+onready var obstacleScene = preload("res://objects/Track/Obstacle.tscn")
 
 onready var trackDefinition = _generateTrackLayout()
 var unused_segments = []
@@ -122,23 +123,33 @@ func _generateObstacles(length):
 	# The obstacle type will have even distribution
 	# Obstacles will get more dense as the track goes on?
 	
-	var numObstacles = 10
+	var numObstacles = 100
 	var obstaclesToPlace = []
 	
 	# Spawn a bucket of obstacles
 	var numToSpawm = 0
 	while numToSpawm < numObstacles:
+		obstaclesToPlace.append(obstacleScene.instance())
+		obstaclesToPlace.append(obstacleScene.instance())
+		obstaclesToPlace.append(obstacleScene.instance())
+		obstaclesToPlace.append(obstacleScene.instance())
+		obstaclesToPlace.append(obstacleScene.instance())
+		obstaclesToPlace.append(obstacleScene.instance())
+		obstaclesToPlace.append(obstacleScene.instance())
+		obstaclesToPlace.append(obstacleScene.instance())
+		obstaclesToPlace.append(obstacleScene.instance())
 		obstaclesToPlace.append(opponentScene.instance())
-		numToSpawm += 1
+		numToSpawm += 10
 	
 	# Lets figure out where to put these
-	# TODO: Just doing even distribution for now
 	for dist in range(0, numObstacles):
-		obstaclesToPlace.shuffle()
-		obstacleList.append([dist * (1.0 / numObstacles), obstaclesToPlace.pop_back()])
+		var variance = randf() * 0.01 # range 0 to 0.01
+		var location = ((1.0 / numObstacles) * dist) - variance
+		var obstacle = obstaclesToPlace.pop_front()
+		obstacleList.append([location, obstacle])
+		pass
 	
-	# Remove the first obstacle always
-	obstacleList.pop_front()
+	pass
 	return obstacleList
 
 func _generate_pedestrians(length):
@@ -325,15 +336,29 @@ func _create_needed_track():
 		#TODO: Reimplement adding obstacles
 		# If we've gone far enough create an opponent behind the player
 		var obstacleAdded = false
-		for remaining_obstacle in trackDefinition['obstacles']:
-			if remaining_obstacle[0] <= _progress_follow.get_unit_offset():
+		var element_to_remove = null
+		var unit_distance = _progress_follow.get_unit_offset()
+		# For all the obstacles
+		for element in range(trackDefinition["obstacles"].size()):
+			var obstacle = trackDefinition["obstacles"][element]
+			var the_obstacle = obstacle[1]
+			# Do we want to place it down?
+			if obstacle[0] <= unit_distance:
 				obstacleAdded = true
-				add_child(remaining_obstacle[1])
-				remaining_obstacle[1].transform.origin.z = 10
-				remaining_obstacle[1].player = get_parent().get_node("Player")
+				element_to_remove = element
+				
+				# What kind of obstacle is this?
+				if (the_obstacle.get_filename() == opponentScene.get_path()):
+					the_obstacle.transform.origin.z = 10
+					the_obstacle.player = get_parent().get_node("Player")
+					add_child(the_obstacle)
+				else:
+					the_obstacle.transform.origin = new_road._get_random_position(0)
+					new_road.add_child(the_obstacle)
 				break
+		# Remove the obstacle from the list if added
 		if obstacleAdded == true:
-			trackDefinition['obstacles'].pop_front ()
+			trackDefinition['obstacles'].remove(element_to_remove)
 		
 		#TODO: Reimplement pedestrians
 		"""

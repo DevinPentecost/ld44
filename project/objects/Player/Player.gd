@@ -80,7 +80,7 @@ var health_loss =  3.5 #Health loss per second
 
 #Turning speeds
 var turn_speed = 15 #Left and right movement per second normally
-var turn_boost_speed = 10
+var turn_boost_speed = 9
 var turn_brake_speed = 18
 var current_turn_speed = 0
 
@@ -94,9 +94,9 @@ var min_speed = 3
 var acceleration = 4
 
 #Boost stuff
-var max_speed_boost = 15
-var acceleration_boost = 5
-var health_loss_boost = 4.5 #Health loss per second
+var max_speed_boost = 18
+var acceleration_boost = 7
+var health_loss_boost = 7.5 #Health loss per second
 
 #Brake stuff
 var speed_brake = 3
@@ -442,7 +442,7 @@ func hit_opponent(oppo, enter):
 		if oppo.global_transform.origin.x < global_transform.origin.x:
 			side = -side
 		$SparkParticles.transform.origin.x = side
-		oppo.bump(3 * side)
+		oppo.bump(7 * side)
 		movement_state.bump = -15 * side
 	$SparkParticles.emitting = enter
 	

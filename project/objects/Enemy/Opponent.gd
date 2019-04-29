@@ -9,6 +9,10 @@ onready var vertical_movement = 0
 onready var stunned = 0
 onready var health_value = 15
 var player = null
+var spin = 0
+var spin_speed = 10
+
+onready var _player_anim = $Enemy/Car/Enemy/AnimationPlayer
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -47,6 +51,23 @@ func _process(delta):
 		stunned -= delta
 	
 	vertical_movement += _calculate_new_vertical_movement(delta)
+	
+	if spin != 0:
+		rotate_y(spin_speed * delta)
+		_player_anim.play("armature|armature|hit|armature|hit")
+		vertical_movement = 10
+	else:
+		#Moving far left or right?
+		if abs(horizontal_movement) > 5:
+			if sign(horizontal_movement) > 0:
+				_player_anim.play("armature|armature|steer.R|armature|steer.R")
+			else:
+				_player_anim.play("armature|armature|steer.L|armature|steer.L")
+		else:
+			if sign(vertical_movement) > 0:
+				_player_anim.play("armature|armature|braking|armature|braking")
+			else:
+				_player_anim.play("armature|armature|boost|armature|boost")
 
 func bump(magnitude):
 	horizontal_movement = magnitude
@@ -64,11 +85,40 @@ func _on_PlayerColllider_body_exited(body):
 	if body.is_in_group("player"):
 		body.hit_opponent(self, false)
 
+func _burnout(announce=true):
+	
+	#Can't hit the wall any more
+	remove_child($WallCollider)
+	
+	$Crash.playing = true
+	
+	if announce:
+		$Announcer.playing = true
+	
+	#Animate it too
+	spin = randi() % 2
+	if not spin:
+		spin = -1
+		
+	#Die after a bit
+	var timer = Timer.new()
+	add_child(timer)
+	timer.start(3)
+	yield(timer, "timeout")
+	
+	#We can now go away
+	queue_free()
 
 func _on_WallCollider_body_entered(body):
 	if body.is_in_group("wall"):
-		visible = false
-		$Crash.playing = true
-		$Announcer.playing = true
-		remove_child($Area)
+		
+		#Spin away
+		_burnout()
 		player.hit_pickup(self)
+		
+		
+
+func _on_TrackFollower_track_completed():
+	
+	#If you ain't winnin, ya losin
+	_burnout(false)

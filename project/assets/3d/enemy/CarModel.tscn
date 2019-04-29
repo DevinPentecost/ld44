@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://assets/3d/car.glb" type="PackedScene" id=1]
+
+[node name="Scene Root" index="0" instance=ExtResource( 1 )]
+transform = Transform( -0.4, 0, -3.49691e-008, 0, 0.4, 0, 3.49691e-008, 0, -0.4, 0, 0, 0 )
+

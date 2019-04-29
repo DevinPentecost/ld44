@@ -15,6 +15,9 @@ var delay_range = Vector2(0, 0.25)
 var lifetime = Vector2(0.75, 2)
 var duration = 0
 
+var source = null
+var target = null
+
 #SFX
 var slurp_pitch_range = Vector2(0.85, 1.5)
 
@@ -37,10 +40,13 @@ func _generate_path():
 	var curve = Curve3D.new()
 	
 	#Generate 'launch' point
+	var start = Vector3(0, 0, 0)
+	if source:
+		start = source.transform.origin
 	var out_x = rand_range(launch_min.x, launch_max.x)
 	var out_y = rand_range(launch_min.y, launch_max.y)
 	var out_z = rand_range(launch_min.z, launch_max.z)
-	curve.add_point(Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(out_x, out_y, out_z))
+	curve.add_point(start, Vector3(0, 0, 0), Vector3(out_x, out_y, out_z))
 	
 	#Add the top point
 	var point_x = rand_range(top_min.x, top_max.x)
@@ -49,10 +55,13 @@ func _generate_path():
 	curve.add_point(Vector3(point_x, point_y, point_z))
 	
 	#Add the return
+	var end = Vector3(0, 0, 0)
+	if target:
+		end = target.transform.origin
 	var in_x = rand_range(return_min.x, return_max.x)
 	var in_y = rand_range(return_min.y, return_max.y)
 	var in_z = rand_range(return_min.z, return_max.z)
-	curve.add_point(Vector3(0, 0, 0), Vector3(in_x, in_y, in_z))
+	curve.add_point(end, Vector3(in_x, in_y, in_z))
 	
 	#Give the curve
 	$Path.curve = curve

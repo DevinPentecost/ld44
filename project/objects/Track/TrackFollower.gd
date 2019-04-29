@@ -20,7 +20,7 @@ onready var purpScene = preload("res://objects/Track/Debug/PurpleNode.tscn")
 onready var roadscene = preload("res://objects/Track/Road.tscn")
 onready var treescene = preload("res://scenes/caleb/Tree.tscn")
 onready var dirtscene = preload("res://objects/Track/Dirt.tscn")
-onready var opponentScene = preload("res://objects/Track/Opponent.tscn")
+onready var opponentScene = preload("res://objects/Enemy/Opponent.tscn")
 onready var obstacleScene = preload("res://objects/Track/Obstacle.tscn")
 
 onready var trackDefinition = _generateTrackLayout()
@@ -79,7 +79,7 @@ func _generateTrackLayout():
 	
 	#Generate a track
 	var tracks = []
-	var track_length = 1 #50
+	var track_length = 35
 	var total_angle = 0
 	for track_index in range(track_length):
 		

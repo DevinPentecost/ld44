@@ -385,7 +385,7 @@ func hit_pickup(pickup):
 	#Spawn a bunch of blood (GROSSSSSS)
 	var count = 7
 	count += randi() % 6
-	_spawn_blood(count)
+	_spawn_blood(count, pickup)
 	
 	#Play a pickup sound
 	
@@ -472,9 +472,9 @@ func _on_BrakeTimer_timeout():
 	#The brake timer needs to keep going
 	_brake_timer.start()
 	
-	_spawn_blood()
+	_spawn_blood(1, self)
 
-func _spawn_blood(amount=1):
+func _spawn_blood(amount=1, source=null, target=null):
 	if movement_state.locked:
 		return
 	
@@ -483,6 +483,8 @@ func _spawn_blood(amount=1):
 		
 		#Spawn a new blood boy
 		var blood_particle = BloodParticle.instance()
+		blood_particle.source = source
+		blood_particle.target = target
 		add_child(blood_particle)
 		
 func sunset():

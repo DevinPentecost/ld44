@@ -5,6 +5,7 @@ const _possible_sprites = [
 	preload("res://objects/Track/Pickup/bloodbag.png"),
 	preload("res://objects/Track/Pickup/cauldron.png"),
 	preload("res://objects/Track/Pickup/chalice.png"),
+	preload("res://objects/Track/Pickup/doctor.png"),
 ]
 const _splat_sprite = preload("res://objects/Track/Pickup/splat.png")
 

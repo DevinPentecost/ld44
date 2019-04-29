@@ -35,7 +35,7 @@ sky_horizon_color = Color( 0.847059, 0.694118, 0.952941, 1 )
 sky_curve = 0.0182756
 sky_energy = 0.5
 ground_horizon_color = Color( 0.423529, 0.372549, 0.388235, 1 )
-sun_latitude = 180.0
+sun_latitude = 85.45
 sun_energy = 0.0
 
 [sub_resource type="Environment" id=11]

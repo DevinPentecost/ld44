@@ -94,7 +94,7 @@ func _on_Player_player_brake(start, forced):
 	
 
 func _on_Button_button_up():
-	$StartMenu
+	$StartMenu.hide()
 	
 	
 	$FuelMeter/Syringe/Syringe_bar.value = 100

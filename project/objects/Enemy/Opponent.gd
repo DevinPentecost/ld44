@@ -1,9 +1,5 @@
 extends StaticBody
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
 onready var horizontal_movement = 0
 onready var vertical_movement = 0
 onready var stunned = 0

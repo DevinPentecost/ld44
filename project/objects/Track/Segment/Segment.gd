@@ -2,7 +2,6 @@ extends Spatial
 
 const RoadScene = preload("res://objects/Track/Road.tscn")
 const PedestrianScene = preload("res://objects/Track/Pedestrian.tscn")
-const ObstacleScene = preload("res://objects/Track/Obstacle.tscn")
 
 #The curve we are a part of
 var path_follow = null

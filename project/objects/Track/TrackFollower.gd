@@ -21,7 +21,7 @@ onready var roadscene = preload("res://objects/Track/Road.tscn")
 onready var treescene = preload("res://scenes/caleb/Tree.tscn")
 onready var dirtscene = preload("res://objects/Track/Dirt.tscn")
 onready var opponentScene = preload("res://objects/Enemy/Opponent.tscn")
-onready var obstacleScene = preload("res://objects/Track/Obstacle.tscn")
+onready var obstacleScene = preload("res://objects/Track/Obstacle/Obstacle.tscn")
 
 onready var trackDefinition = _generateTrackLayout()
 var unused_segments = []
@@ -138,7 +138,11 @@ func _generateObstacles(length):
 		obstaclesToPlace.append(obstacleScene.instance())
 		obstaclesToPlace.append(obstacleScene.instance())
 		obstaclesToPlace.append(obstacleScene.instance())
-		obstaclesToPlace.append(opponentScene.instance())
+		
+		#Make an opponent
+		var new_opponent = opponentScene.instance()
+		connect("track_completed", new_opponent, "_on_TrackFollower_track_completed")
+		obstaclesToPlace.append(new_opponent)
 		numToSpawm += 10
 	
 	# Lets figure out where to put these

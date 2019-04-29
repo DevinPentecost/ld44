@@ -44,7 +44,7 @@ func _submit_score():
 	
 	#Send the score
 	# no error handling for submission failures
-	var submit_url = "http://dreamlo.com/lb/BgYO9QhznU6z2dnGdcOcPQBcrAlcquwUyP5iKXLKk4vg/add/" + player_name + "/0/" + str(player_time) + "/"	
+	var submit_url = "http://dreamlo.com/lb/BgYO9QhznU6z2dnGdcOcPQBcrAlcquwUyP5iKXLKk4vg/add/" + player_name + "/0/" + str(int(1000*player_time)) + "/"	
 	$HTTPRequest.request(submit_url, PoolStringArray([]), false)
 	$WinBG/SubmitScore.text = "TIME SUBMITTED"
 	$WinBG/SubmitName.editable = true

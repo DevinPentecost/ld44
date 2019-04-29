@@ -12,14 +12,14 @@ start_pos = Vector2( 9.751, 3.33 )
 end_pos = Vector2( 177.181, 1.903 )
 
 [node name="Background" type="TextureRect" parent="."]
-margin_right = 200.0
-margin_bottom = 25.0
+margin_right = 1278.0
+margin_bottom = 33.0
 texture = ExtResource( 2 )
 
 [node name="Progress" type="TextureRect" parent="."]
-margin_left = 177.181
+margin_left = 176.279
 margin_top = 1.90262
-margin_right = 198.181
+margin_right = 197.279
 margin_bottom = 22.9026
 texture = ExtResource( 3 )
 

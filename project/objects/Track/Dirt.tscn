@@ -6,7 +6,7 @@
 [node name="Dirt" type="Spatial"]
 
 [node name="LoDSprite" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.803699, 0 )
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.0505357, -0.839344, 0.0518436 )
 texture = ExtResource( 2 )
 tex_furthest = ExtResource( 2 )
 tex_lod0 = ExtResource( 2 )

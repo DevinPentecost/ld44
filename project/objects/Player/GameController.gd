@@ -11,6 +11,7 @@ var brake_state = false
 func _ready():
 	
 	set_process(true)
+	
 
 
 func _process(delta):
@@ -23,7 +24,8 @@ func _process(delta):
 		var time_stamp = "%02d : %02d" % [minutes, seconds]
 		$TimerLabel.text = time_stamp
 		
-		
+	
+	# handle syringe rotating - based on player brake state
 	if brake_state != $Player.movement_state.is_braking():
 		brake_state = !brake_state
 		var fuel_angle = $FuelMeter.rect_rotation
@@ -36,10 +38,9 @@ func _process(delta):
 			
 		
 	#TEST TO END GAME EARLY
-	if time > 3 and finish_time == 0:
-		_end_race()
-
-
+	#if time > 3 and finish_time == 0:
+	#	_end_race()
+	
 func _start_race():
 	
 	time = 0
@@ -52,15 +53,14 @@ func _end_race():
 	#Let the player know they won
 	
 	#Hide game-time UI elements
-	#_tween.interpolate_property($Progress, "rect_position.x", $Progress.rect_position.x, -100, 1, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	_tween.interpolate_property($Progress, "rect_position.x", $Progress.rect_position.x, -100, 1, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	
 	
 	#Show leaderboard info, let player submit
-	#$WinScreen.visible = true
-	
-	_tween.stop_all()
-	_tween.interpolate_property($WinScreen, "rect_position.y", $WinScreen.rect_position.y, $WinScreen.rect_position.y + 724, 0.5, Tween.TRANS_QUAD,Tween.TRANS_BOUNCE)
-	_tween.start()
+	$WinScreen.visible = true
+		
+	$Tween.interpolate_property($WinScreen, "rect_position.y", $WinScreen.rect_position.y, $WinScreen.rect_position.y + 724, 0.5, Tween.TRANS_QUAD,Tween.TRANS_BOUNCE)
+	$Tween.start()
 	
 	#Lock camera, move player off screen
 	
@@ -82,21 +82,24 @@ func _on_Player_player_force_brake(start):
 
 
 func _on_SubmitScore_button_up():
+	
+	# get used entered name
 	var submitName = $WinScreen/WinBG/SubmitName.text
 	if submitName == '':
 		submitName = 'Anon'
 	var submitTime = finish_time
+	#submit score to LB
 	var submitURL = "http://dreamlo.com/lb/BgYO9QhznU6z2dnGdcOcPQBcrAlcquwUyP5iKXLKk4vg/add/" + submitName + "/0/" + str(submitTime) + "/"
-	$WinScreen/HTTPRequest.request(submitURL, PoolStringArray([]),false)
 	
+	# no error handling for submission failures
+	$WinScreen/HTTPRequest.request(submitURL, PoolStringArray([]),false)
 	$WinScreen/WinBG/SubmitScore.text = "TIME SUBMITTED"
 	$WinScreen/WinBG/SubmitName.hide()
 	$WinScreen/WinBG/SubmitScore.disabled = true
 
 
 func _on_ViewLB_button_up():
-	# to update to webpage
-	OS.shell_open("http://chilidog.faith/lb/growborally")
+	OS.shell_open("http://chilidog.faith/lb/ld44")
 
 
 func _on_QuitButton_button_up():

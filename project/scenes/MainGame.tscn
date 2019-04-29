@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://objects/Player/GameController.gd" type="Script" id=1]
 [ext_resource path="res://objects/Player/Player.tscn" type="PackedScene" id=2]
@@ -14,6 +14,8 @@
 size = 64
 use_filter = true
 font_data = ExtResource( 6 )
+
+[sub_resource type="StyleBoxEmpty" id=12]
 
 [sub_resource type="StyleBoxEmpty" id=2]
 
@@ -63,7 +65,6 @@ target = NodePath("../CameraTarget")
 
 [node name="TrackFollower" parent="." instance=ExtResource( 4 )]
 player = NodePath("../Player")
-player_camera = NodePath("../PlayerCamera")
 
 [node name="CameraTarget" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -4 )
@@ -92,6 +93,7 @@ track = NodePath("../TrackFollower")
 visible = false
 
 [node name="WinScreen" type="Control" parent="."]
+visible = false
 margin_left = 761.0
 margin_top = -37.0
 margin_right = 1242.0
@@ -110,6 +112,7 @@ margin_left = 356.0
 margin_top = 356.0
 margin_right = 658.0
 margin_bottom = 420.0
+custom_styles/focus = SubResource( 12 )
 custom_styles/normal = SubResource( 2 )
 custom_fonts/font = SubResource( 3 )
 align = 1
@@ -192,8 +195,8 @@ environment = SubResource( 11 )
 
 [connection signal="player_force_brake" from="Player" to="." method="_on_Player_player_force_brake"]
 [connection signal="track_completed" from="TrackFollower" to="Progress" method="_on_TrackFollower_track_completed"]
-[connection signal="track_completed" from="TrackFollower" to="." method="_on_TrackFollower_track_completed"]
 [connection signal="track_completed" from="TrackFollower" to="FuelMeter" method="_on_TrackFollower_track_completed"]
+[connection signal="track_completed" from="TrackFollower" to="." method="_on_TrackFollower_track_completed"]
 [connection signal="turning" from="TrackFollower" to="Player" method="_on_TrackFollower_turning"]
 [connection signal="button_up" from="WinScreen/WinBG/SubmitScore" to="." method="_on_SubmitScore_button_up"]
 [connection signal="button_up" from="WinScreen/WinBG/ViewLB" to="." method="_on_ViewLB_button_up"]

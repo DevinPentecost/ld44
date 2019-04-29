@@ -220,15 +220,18 @@ func _process_movement_turn(delta):
 	#Which direction to move?
 	var movement_direction = movement_state.get_movement_direction()
 	var is_braking = movement_state.is_braking()
+	var is_boosting = movement_state.is_boosting()
 		
 	if movement_direction > 0:
 		player_anim.play("armature|armature|steer.R|armature|steer.R")
 	elif movement_direction < 0:
 		player_anim.play("armature|armature|steer.L|armature|steer.L")
 	elif is_braking:
-		player_anim.play("armature|armature|braking|armature|braking")
-	else:
+		player_anim.play("armature|armature|drawblood|armature|drawblood")
+	elif is_boosting:
 		player_anim.play("armature|armature|boost|armature|boost")
+	else:
+		player_anim.play("armature|armature|braking|armature|braking")
 	
 	#Determine current turning speed based on brake/boost
 	var turning_speed = turn_speed
@@ -343,7 +346,7 @@ func _unhandled_key_input(event):
 	elif event.is_action_released("boost"):
 		movement_state.boost = false
 	elif event.is_action_pressed("brake"):
-		player_anim.play("armature|armature|braking|armature|braking")
+		#player_anim.play("armature|armature|braking|armature|braking")
 		movement_state.brake = true
 	elif event.is_action_released("brake"):
 		movement_state.brake = false

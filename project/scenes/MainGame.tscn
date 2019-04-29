@@ -36,7 +36,7 @@ script = ExtResource( 1 )
 [node name="Player" parent="." instance=ExtResource( 2 )]
 
 [node name="PlayerCamera" parent="." instance=ExtResource( 3 )]
-transform = Transform( -0.94085, 0.104702, -0.322239, 0, 0.951057, 0.309017, 0.338822, 0.290739, -0.894802, -2.60733, 3.93334, -7.92972 )
+transform = Transform( 1, 0, 0, 0, 0.951057, 0.309017, 0, -0.309017, 0.951057, 0, 9, 9.271 )
 fov = 60.0
 player = NodePath("../Player")
 target = NodePath("../CameraTarget")
@@ -91,10 +91,10 @@ custom_colors/font_color_hover = Color( 0.8, 0.517647, 0.517647, 1 )
 custom_colors/font_color_pressed = Color( 1, 0.298039, 0.298039, 1 )
 text = "PLAY"
 
-[connection signal="race_finished" from="." to="FuelMeter" method="_on_MainGame_race_finished"]
-[connection signal="race_finished" from="." to="Progress" method="_on_MainGame_race_finished"]
-[connection signal="race_finished" from="." to="WinScreen" method="_on_MainGame_race_finished"]
 [connection signal="race_finished" from="." to="Bloodletting" method="_on_MainGame_race_finished"]
+[connection signal="race_finished" from="." to="Progress" method="_on_MainGame_race_finished"]
+[connection signal="race_finished" from="." to="FuelMeter" method="_on_MainGame_race_finished"]
+[connection signal="race_finished" from="." to="WinScreen" method="_on_MainGame_race_finished"]
 [connection signal="player_brake" from="Player" to="." method="_on_Player_player_brake"]
 [connection signal="track_completed" from="TrackFollower" to="." method="_on_TrackFollower_track_completed"]
 [connection signal="turning" from="TrackFollower" to="Player" method="_on_TrackFollower_turning"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://objects/Player/GameController.gd" type="Script" id=1]
 [ext_resource path="res://objects/Player/Player.tscn" type="PackedScene" id=2]
@@ -16,6 +16,7 @@
 [ext_resource path="res://objects/UI/mmlb2.png" type="Texture" id=14]
 [ext_resource path="res://scenes/thanks.ogg" type="AudioStream" id=15]
 [ext_resource path="res://objects/UI/PauseMenu.tscn" type="PackedScene" id=16]
+[ext_resource path="res://assets/Time Driving.ogg" type="AudioStream" id=17]
 
 [sub_resource type="DynamicFont" id=1]
 size = 64
@@ -35,6 +36,7 @@ target = NodePath("../CameraTarget")
 
 [node name="TrackFollower" parent="." instance=ExtResource( 4 )]
 player = NodePath("../Player")
+player_camera = NodePath("../PlayerCamera")
 
 [node name="CameraTarget" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -4 )
@@ -99,6 +101,10 @@ texture_hover = ExtResource( 14 )
 stream = ExtResource( 15 )
 
 [node name="PauseMenu" parent="." instance=ExtResource( 16 )]
+
+[node name="BGM" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 17 )
+autoplay = true
 
 [connection signal="race_finished" from="." to="FuelMeter" method="_on_MainGame_race_finished"]
 [connection signal="race_finished" from="." to="Bloodletting" method="_on_MainGame_race_finished"]

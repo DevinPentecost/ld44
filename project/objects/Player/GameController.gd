@@ -17,9 +17,14 @@ onready var player_anim = $Player/CarModel/PlayerModel/AnimationPlayer
 #Grab nodes
 onready var _fuel_meter = $FuelMeter
 
+#BGM
+var volume = {true: 0.5, false: 1}
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	
+	$BGM.unit_db = volume[true]
 	
 	set_process(true)
 	player_anim.play("armature|armature|intro.idle|armature|intro.idle")
@@ -60,6 +65,8 @@ func _start_race():
 	$FuelMeter/FuelBar.value = 100
 	
 	time = 0
+	
+	$BGM.unit_db = volume[false]
 	
 	
 func _end_race():
@@ -144,6 +151,9 @@ func _pause(paused):
 	
 	#Show/hide accordingly
 	$PauseMenu.show(paused)
+	
+	#Change music
+	$BGM.unit_db = volume[paused]
 
 func _on_WinScreen_quit_pressed():
 	

@@ -157,3 +157,4 @@ stream = ExtResource( 4 )
 [connection signal="pressed" from="WinBG/SubmitScore" to="." method="_on_SubmitScore_pressed"]
 [connection signal="pressed" from="WinBG/ViewLB" to="." method="_on_ViewLB_pressed"]
 [connection signal="pressed" from="WinBG/QuitButton" to="." method="_on_QuitButton_pressed"]
+[connection signal="pressed" from="WinBG/ReplayButton" to="." method="_on_ReplayButton_pressed"]

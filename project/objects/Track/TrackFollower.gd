@@ -196,6 +196,9 @@ func _ready():
 	#Set the progress follower
 	_progress_follow.set_offset(0)
 	_progress_follow.transform = startingTransform
+	
+	#Build the first batch of track
+	_create_needed_track()
 
 func _build_curve():
 	
@@ -204,7 +207,7 @@ func _build_curve():
 	
 	# Instance a new scene and give it the same start point as the track follower/generator
 	var start_track = nodescene.instance()
-	start_track.transform.origin = transform.origin - Vector3(0, 0, -100)
+	start_track.transform.origin = transform.origin - Vector3(0, 0, 0)
 	
 	# Append to associated lists
 	nodes.append(start_track)
@@ -329,7 +332,7 @@ func _create_needed_track():
 		var spawn_pickup = (randf() * 100) < pickup_spawn_rate
 		if (pickup_distance > pickup_wait_distance) and (spawn_pickup or pickup_distance > pickup_pity_distance):
 			#Reset the distance
-			print("PICKUP @ D :", pickup_distance)
+			#print("PICKUP @ D :", pickup_distance)
 			pickup_distance = 0
 			
 			#Make the new pickup
@@ -343,28 +346,33 @@ func _create_needed_track():
 		var obstacleAdded = false
 		var element_to_remove = null
 		var unit_distance = _progress_follow.get_unit_offset()
-		# For all the obstacles
-		for element in range(trackDefinition["obstacles"].size()):
-			var obstacle = trackDefinition["obstacles"][element]
-			var the_obstacle = obstacle[1]
-			# Do we want to place it down?
-			if obstacle[0] <= unit_distance:
-				obstacleAdded = true
-				element_to_remove = element
-				
-				# What kind of obstacle is this?
-				if (the_obstacle.get_filename() == opponentScene.get_path()):
-					the_obstacle.transform.origin.z = 10
-					the_obstacle.player = get_parent().get_node("Player")
-					add_child(the_obstacle)
-				else:
-					the_obstacle.transform.origin = new_road._get_random_position(0)
-					new_road.add_child(the_obstacle)
-				break
-		# Remove the obstacle from the list if added
-		if obstacleAdded == true:
-			trackDefinition['obstacles'].remove(element_to_remove)
 		
+		#Should we make obstacles?
+		if len(_follow_track._sections.get_children()) > 10:
+			
+			# For all the obstacles
+			for element in range(trackDefinition["obstacles"].size()):
+				var obstacle = trackDefinition["obstacles"][element]
+				var the_obstacle = obstacle[1]
+				# Do we want to place it down?
+				if obstacle[0] <= unit_distance:
+					obstacleAdded = true
+					element_to_remove = element
+					
+					# What kind of obstacle is this?
+					if (the_obstacle.get_filename() == opponentScene.get_path()):
+						the_obstacle.transform.origin.z = 10
+						the_obstacle.player = get_parent().get_node("Player")
+						add_child(the_obstacle)
+					else:
+						
+						the_obstacle.transform.origin = new_road._get_random_position(0)
+						new_road.add_child(the_obstacle)
+					break
+			# Remove the obstacle from the list if added
+			if obstacleAdded == true:
+				trackDefinition['obstacles'].remove(element_to_remove)
+			
 		#TODO: Reimplement pedestrians
 		"""
 		#Go through each pedestrian

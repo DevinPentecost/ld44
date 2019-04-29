@@ -4,6 +4,8 @@ signal race_finished
 
 onready var _tween = $Tween
 
+const thanks = preload("res://scenes/thanks.ogg")
+
 #Keep track of the time
 var time = 0
 var finish_time = 0
@@ -26,17 +28,23 @@ func _ready():
 	$FuelMeter.locked = true
 	$PlayerCamera.cinematic = true
 	
+	set_process_unhandled_key_input(true)
+	
 
 
 func _process(delta):
 	if start_state:
 		#Update timer
 		if finish_time == 0:
-			time += delta
-			var minutes = time/60
-			var seconds = int(round(time))%60
-			var time_stamp = "%02d : %02d" % [minutes, seconds]
-			$TimerLabel.text = time_stamp
+			
+			#Are we locked?
+			if not $TrackFollower.locked:
+				
+				time += delta
+				var minutes = time/60
+				var seconds = int(round(time))%60
+				var time_stamp = "%02d : %02d" % [minutes, seconds]
+				$TimerLabel.text = time_stamp
 	
 	
 func _start_race():
@@ -107,3 +115,66 @@ func _on_Button_button_up():
 	player_anim.play("armature|armature|intro.walk|armature|intro.walk")
 	yield(player_anim, "animation_finished" )
 	_start_race()
+
+func _quit():
+	
+	#Say Thanks!
+	$SFX.stream = thanks
+	$SFX.play()
+	yield($SFX, "finished")
+	
+	#They really mean it
+	get_tree().quit()
+	
+
+func _pause(paused):
+	
+	#Game not even started?
+	if not start_state:
+		_quit()
+		return
+	
+	#Lock and unlock accordingly
+	$TrackFollower.locked = paused
+	$Player.movement_state.locked = paused
+	$FuelMeter.locked = paused
+	$PlayerCamera.cinematic = paused
+	
+	#Show/hide accordingly
+	$PauseMenu.show(paused)
+
+func _on_WinScreen_quit_pressed():
+	
+	#Ask user if they are sure
+	_pause(true)
+
+
+func _on_WinScreen_restart_pressed():
+	
+	#Reload this scene
+	get_tree().reload_current_scene()
+
+
+func _on_PauseMenu_quit_pressed():
+	
+	_quit()
+
+
+func _on_PauseMenu_restart_pressed():
+	
+	#Reload this scene
+	get_tree().reload_current_scene()
+
+
+func _on_PauseMenu_resume_pressed():
+	
+	#Unlock everything
+	_pause(false)
+
+func _unhandled_key_input(event):
+	#We respond to various movement commands
+	if event.is_action_pressed("pause"):
+		#Toggle pause
+		_pause(not $TrackFollower.locked)
+	
+

@@ -287,6 +287,9 @@ func _process_health(delta):
 	if not is_alive:
 		return
 	
+	if movement_state.locked:
+		return
+	
 	#How much health to lose?
 	var health_to_lose = health_loss
 	
@@ -316,7 +319,6 @@ func _process_health(delta):
 		
 	#Did we go under?
 	if current_health < 0:
-		print(current_health)
 		current_health = 0
 		#emit_signal("player_died")
 		#is_alive = false
@@ -332,6 +334,10 @@ func _process_engine_sfx(delta):
 	var idle_pitch_weight = current_speed/max_idle_pitch_speed
 	var idle_pitch = lerp(min_idle_pitch, max_idle_pitch, idle_pitch_weight)
 	_idle_engine_player.pitch_scale = idle_pitch
+	
+	#No trying to boost please
+	if movement_state.locked:
+		return
 	
 	#Are we boosting?
 	if _boost_engine_player.playing:

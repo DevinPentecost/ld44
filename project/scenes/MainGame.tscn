@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://objects/Player/GameController.gd" type="Script" id=1]
 [ext_resource path="res://objects/Player/Player.tscn" type="PackedScene" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://objects/UI/Progress.tscn" type="PackedScene" id=7]
 [ext_resource path="res://objects/UI/Bloodletting.tscn" type="PackedScene" id=8]
 [ext_resource path="res://objects/UI/WinScreen/WinScreen.tscn" type="PackedScene" id=9]
+[ext_resource path="res://objects/UI/PauseMenu.tscn" type="PackedScene" id=10]
 
 [sub_resource type="DynamicFont" id=1]
 size = 64
@@ -43,6 +44,7 @@ target = NodePath("../CameraTarget")
 
 [node name="TrackFollower" parent="." instance=ExtResource( 4 )]
 player = NodePath("../Player")
+player_camera = NodePath("../PlayerCamera")
 
 [node name="CameraTarget" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -4 )
@@ -73,6 +75,7 @@ track = NodePath("../TrackFollower")
 game_controller = NodePath("..")
 
 [node name="StartMenu" type="Control" parent="."]
+editor/display_folded = true
 margin_right = 40.0
 margin_bottom = 40.0
 
@@ -91,11 +94,20 @@ custom_colors/font_color_hover = Color( 0.8, 0.517647, 0.517647, 1 )
 custom_colors/font_color_pressed = Color( 1, 0.298039, 0.298039, 1 )
 text = "PLAY"
 
-[connection signal="race_finished" from="." to="Bloodletting" method="_on_MainGame_race_finished"]
+[node name="PauseMenu" parent="." instance=ExtResource( 10 )]
+
+[node name="SFX" type="AudioStreamPlayer" parent="."]
+
 [connection signal="race_finished" from="." to="Progress" method="_on_MainGame_race_finished"]
-[connection signal="race_finished" from="." to="FuelMeter" method="_on_MainGame_race_finished"]
 [connection signal="race_finished" from="." to="WinScreen" method="_on_MainGame_race_finished"]
+[connection signal="race_finished" from="." to="Bloodletting" method="_on_MainGame_race_finished"]
+[connection signal="race_finished" from="." to="FuelMeter" method="_on_MainGame_race_finished"]
 [connection signal="player_brake" from="Player" to="." method="_on_Player_player_brake"]
 [connection signal="track_completed" from="TrackFollower" to="." method="_on_TrackFollower_track_completed"]
 [connection signal="turning" from="TrackFollower" to="Player" method="_on_TrackFollower_turning"]
+[connection signal="quit_pressed" from="WinScreen" to="." method="_on_WinScreen_quit_pressed"]
+[connection signal="restart_pressed" from="WinScreen" to="." method="_on_WinScreen_restart_pressed"]
 [connection signal="button_up" from="StartMenu/StartButton" to="." method="_on_Button_button_up"]
+[connection signal="quit_pressed" from="PauseMenu" to="." method="_on_PauseMenu_quit_pressed"]
+[connection signal="restart_pressed" from="PauseMenu" to="." method="_on_PauseMenu_restart_pressed"]
+[connection signal="resume_pressed" from="PauseMenu" to="." method="_on_PauseMenu_resume_pressed"]

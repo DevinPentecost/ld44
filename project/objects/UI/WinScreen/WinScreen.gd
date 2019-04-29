@@ -1,5 +1,8 @@
 extends Control
 
+signal restart_pressed
+signal quit_pressed
+
 export(NodePath) var game_controller
 onready var _game_controller = get_node(game_controller)
 
@@ -80,5 +83,9 @@ func _on_QuitButton_pressed():
 	
 	#Quit the game?
 	#Quit to main menu?
-	#TODO
-	pass
+	emit_signal("quit_pressed")
+
+func _on_ReplayButton_pressed():
+	
+	#Restart the scene maybe
+	emit_signal("restart_pressed")

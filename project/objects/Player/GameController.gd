@@ -48,6 +48,8 @@ func _start_race():
 	$Player.movement_state.locked = false
 	$FuelMeter.locked = false
 	$PlayerCamera.cinematic = false
+	$Player.current_health = 100
+	$FuelMeter/FuelBar.value = 100
 	
 	time = 0
 	

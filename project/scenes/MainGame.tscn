@@ -58,10 +58,10 @@ track = NodePath("../TrackFollower")
 [node name="WinScreen" parent="." instance=ExtResource( 9 )]
 game_controller = NodePath("..")
 
-[connection signal="race_finished" from="." to="WinScreen" method="_on_MainGame_race_finished"]
 [connection signal="race_finished" from="." to="FuelMeter" method="_on_MainGame_race_finished"]
 [connection signal="race_finished" from="." to="Bloodletting" method="_on_MainGame_race_finished"]
 [connection signal="race_finished" from="." to="Progress" method="_on_MainGame_race_finished"]
+[connection signal="race_finished" from="." to="WinScreen" method="_on_MainGame_race_finished"]
 [connection signal="player_brake" from="Player" to="." method="_on_Player_player_brake"]
 [connection signal="track_completed" from="TrackFollower" to="." method="_on_TrackFollower_track_completed"]
 [connection signal="turning" from="TrackFollower" to="Player" method="_on_TrackFollower_turning"]

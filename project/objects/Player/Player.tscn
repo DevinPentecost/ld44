@@ -1,14 +1,15 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://objects/Player/Player.gd" type="Script" id=1]
 [ext_resource path="res://objects/Player/SmokeParticles.tscn" type="PackedScene" id=2]
 [ext_resource path="res://objects/Player/engine_idle.ogg" type="AudioStream" id=3]
 [ext_resource path="res://objects/Player/boost.ogg" type="AudioStream" id=4]
-[ext_resource path="res://assets/3d/CarModel.tscn" type="PackedScene" id=5]
-[ext_resource path="res://assets/3d/PlayerModel.tscn" type="PackedScene" id=6]
-[ext_resource path="res://objects/Player/spark.png" type="Texture" id=7]
-[ext_resource path="res://objects/Player/scrape.ogg" type="AudioStream" id=8]
-[ext_resource path="res://objects/Player/rough.ogg" type="AudioStream" id=9]
+[ext_resource path="res://objects/Player/skid.wav" type="AudioStream" id=5]
+[ext_resource path="res://assets/3d/CarModel.tscn" type="PackedScene" id=6]
+[ext_resource path="res://assets/3d/PlayerModel.tscn" type="PackedScene" id=7]
+[ext_resource path="res://objects/Player/spark.png" type="Texture" id=8]
+[ext_resource path="res://objects/Player/scrape.ogg" type="AudioStream" id=9]
+[ext_resource path="res://objects/Player/rough.ogg" type="AudioStream" id=10]
 
 [sub_resource type="BoxShape" id=1]
 
@@ -19,7 +20,7 @@ params_billboard_mode = 3
 particles_anim_h_frames = 1
 particles_anim_v_frames = 1
 particles_anim_loop = false
-albedo_texture = ExtResource( 7 )
+albedo_texture = ExtResource( 8 )
 
 [sub_resource type="QuadMesh" id=3]
 material = SubResource( 2 )
@@ -47,10 +48,13 @@ stream = ExtResource( 4 )
 unit_db = 8.0
 pitch_scale = 0.5
 
-[node name="CarModel" parent="." instance=ExtResource( 5 )]
+[node name="Skid" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 5 )
+
+[node name="CarModel" parent="." instance=ExtResource( 6 )]
 transform = Transform( -0.5, 0, -4.37114e-008, 0, 0.5, 0, 4.37114e-008, 0, -0.5, 0, 0, 0 )
 
-[node name="PlayerModel" parent="CarModel" instance=ExtResource( 6 )]
+[node name="PlayerModel" parent="CarModel" instance=ExtResource( 7 )]
 
 [node name="SparkParticles" type="CPUParticles" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.6, 0.9 )
@@ -61,18 +65,19 @@ mesh = SubResource( 3 )
 spread = 10.0
 gravity = Vector3( 0, -1, 0 )
 initial_velocity = 5.0
+angular_velocity = 0.0
 angular_velocity_random = 1.0
 scale_amount = 0.2
 
 [node name="ScrapePlayer" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource( 8 )
+stream = ExtResource( 9 )
 unit_db = 6.4
 
 [node name="BrakeTimer" type="Timer" parent="."]
 wait_time = 0.25
 
 [node name="RoadSound" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource( 9 )
+stream = ExtResource( 10 )
 unit_db = 10.0
 pitch_scale = 2.0
 autoplay = true

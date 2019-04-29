@@ -20,6 +20,7 @@ onready var purpScene = preload("res://objects/Track/Debug/PurpleNode.tscn")
 onready var roadscene = preload("res://objects/Track/Road.tscn")
 onready var treescene = preload("res://scenes/caleb/Tree.tscn")
 onready var dirtscene = preload("res://objects/Track/Dirt.tscn")
+onready var opponentScene = preload("res://objects/Track/Opponent.tscn")
 
 onready var trackDefinition = _generateTrackLayout()
 var unused_segments = []
@@ -103,7 +104,7 @@ func _generateTrackLayout():
 	track["length"] = track_length
 	
 	# Also generate obstacles that will go into this track
-	# [0] will be the location of the obstacle in track length
+	# [0] will be the location of the obstacle in track length (from 0 to 1, float)
 	# [1] will be the obstacle scene to place into the track
 	track["obstacles"] = _generateObstacles(track_length)
 	
@@ -121,31 +122,23 @@ func _generateObstacles(length):
 	# The obstacle type will have even distribution
 	# Obstacles will get more dense as the track goes on?
 	
-	var numObstacles = length
+	var numObstacles = 10
 	var obstaclesToPlace = []
 	
 	# Spawn a bucket of obstacles
 	var numToSpawm = 0
 	while numToSpawm < numObstacles:
-		obstaclesToPlace.append(nodescene.instance())
-		obstaclesToPlace.append(blueScene.instance())
-		obstaclesToPlace.append(purpScene.instance())
-		#var sprite = spritescene.instance()
-		#sprite.reference = get_parent().get_node("Camera").get_path()
-		#sprite.tex_closest = load("res://assets/closestLod.png")
-		#sprite.tex_lod0 = load("res://assets/lod0.png")
-		#sprite.tex_lod1 = load("res://assets/lod1.png")
-		#sprite.tex_furthest = load("res://assets/furthestLod.png")
-		#obstaclesToPlace.append(sprite)
-		numToSpawm += 3
+		obstaclesToPlace.append(opponentScene.instance())
+		numToSpawm += 1
 	
 	# Lets figure out where to put these
 	# TODO: Just doing even distribution for now
-	var averageDistribution = length / numObstacles
 	for dist in range(0, numObstacles):
 		obstaclesToPlace.shuffle()
-		obstacleList.append([dist * averageDistribution, obstaclesToPlace.pop_back()])
+		obstacleList.append([dist * (1.0 / numObstacles), obstaclesToPlace.pop_back()])
 	
+	# Remove the first obstacle always
+	obstacleList.pop_front()
 	return obstacleList
 
 func _generate_pedestrians(length):
@@ -330,11 +323,17 @@ func _create_needed_track():
 			pickup.sprite.target = _player_camera
 			
 		#TODO: Reimplement adding obstacles
-		"""
+		# If we've gone far enough create an opponent behind the player
+		var obstacleAdded = false
 		for remaining_obstacle in trackDefinition['obstacles']:
-			if remaining_obstacle[0] <= next_generate_offset:
-				#Make a new 
-		"""
+			if remaining_obstacle[0] <= _progress_follow.get_unit_offset():
+				obstacleAdded = true
+				add_child(remaining_obstacle[1])
+				remaining_obstacle[1].transform.origin.z = 10
+				remaining_obstacle[1].player = get_parent().get_node("Player")
+				break
+		if obstacleAdded == true:
+			trackDefinition['obstacles'].pop_front ()
 		
 		#TODO: Reimplement pedestrians
 		"""

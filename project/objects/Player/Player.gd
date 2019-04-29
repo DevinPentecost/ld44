@@ -8,10 +8,13 @@ signal player_force_brake(start)
 #Grab nodes
 onready var _idle_engine_player = $IdleEngine
 onready var _boost_engine_player = $BoostEngine
+onready var _skid_sound_player = $Skid
 onready var _scrape_player = $ScrapePlayer
 onready var _smoke_particles = $SmokeParticles
 onready var _brake_timer = $BrakeTimer
 onready var player_anim = 	$CarModel/PlayerModel/AnimationPlayer
+
+onready var start_transform = $CarModel.transform
 
 #What is the current movement state
 class MovementState:
@@ -23,6 +26,7 @@ class MovementState:
 	
 	#When the track turns, the player also slides
 	var slide = 0 #The amount to slide the player (negative is left)
+	var bump = 0 # The amount to bump left or right
 	
 	func get_movement_direction():
 		"""
@@ -77,8 +81,8 @@ var health_loss =  3.5 #Health loss per second
 
 #Turning speeds
 var turn_speed = 15 #Left and right movement per second normally
-var turn_boost_speed = 13
-var turn_brake_speed = 9
+var turn_boost_speed = 10
+var turn_brake_speed = 18
 var current_turn_speed = 0
 
 #Forward speed things
@@ -86,8 +90,8 @@ var current_speed = 1
 var current_acceleration = 0
 var target_speed = 0
 
-var max_speed = 10
-var min_speed = 1
+var max_speed = 13
+var min_speed = 3
 var acceleration = 4
 
 #Boost stuff
@@ -239,7 +243,11 @@ func _process_movement_turn(delta):
 		turning_speed = turn_brake_speed
 	elif movement_state.is_boosting():
 		turning_speed = turn_boost_speed
-		
+	
+	#turning_speed *= current_speed
+	
+	if abs(movement_state.bump) > 7:
+		turning_speed *= 0.5
 	
 	#Calculate turn movement
 	current_turn_speed = turning_speed * movement_direction
@@ -247,11 +255,18 @@ func _process_movement_turn(delta):
 	#Adjust for slide
 	current_turn_speed += movement_state.slide
 	
+	# Adjust for any bumping
+	current_turn_speed += movement_state.bump
+	movement_state.bump -= ((movement_state.bump * 0.7) * delta)
+	
+	
 	#Adjust based on frame delta
 	var final_turn_speed = current_turn_speed * delta
 	
 	#Make a vector
 	var movement_vector = Vector3(final_turn_speed, 0, 0)
+	
+	$CarModel.transform = start_transform.rotated(Vector3(0,1,0), (-1)*movement_vector.x)
 	
 	#Move the player left and right accordingly
 	move_and_collide(movement_vector)
@@ -416,12 +431,38 @@ func hit_wall(wall, enter):
 	
 	#Check the SFX too
 	_scrape_player.playing = enter
+
+func hit_opponent(oppo, enter):
+	#Make sparks?
+	if enter:
+		var side = 0.8
+		if oppo.global_transform.origin.x < global_transform.origin.x:
+			side = -side
+		$SparkParticles.transform.origin.x = side
+		oppo.bump(3 * side)
+		movement_state.bump = -15 * side
+	$SparkParticles.emitting = enter
 	
+	#Check the SFX too
+	_scrape_player.playing = enter
 
 func _on_TrackFollower_turning(turn_amount):
 	
+	var slideMultiplier = 8
 	#Slide the player that much
-	movement_state.slide = turn_amount * -800
+	if movement_state.is_braking():
+		slideMultiplier = 5
+	elif movement_state.is_boosting():
+		slideMultiplier = 10
+	movement_state.slide = turn_amount * (-150) * slideMultiplier
+	
+	if _skid_sound_player.playing:
+		pass
+		#if abs(movement_state.slide) <= 5:
+		#	_skid_sound_player.playing = false
+	else:
+		if abs(movement_state.slide) > 8:
+			_skid_sound_player.playing = true
 	
 
 

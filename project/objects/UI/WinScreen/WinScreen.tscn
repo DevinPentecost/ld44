@@ -87,10 +87,10 @@ disabled = true
 text = "SUBMIT SCORE"
 
 [node name="ViewLB" type="Button" parent="WinBG"]
-margin_left = 358.0
-margin_top = 697.734
-margin_right = 662.0
-margin_bottom = 742.734
+margin_left = 356.339
+margin_top = 656.207
+margin_right = 660.339
+margin_bottom = 701.207
 custom_styles/hover = SubResource( 4 )
 custom_styles/pressed = SubResource( 5 )
 custom_styles/focus = SubResource( 6 )
@@ -102,7 +102,6 @@ custom_colors/font_color_pressed = Color( 1, 0.298039, 0.298039, 1 )
 text = "LEADERBOARD"
 
 [node name="QuitButton" type="Button" parent="WinBG"]
-visible = false
 margin_left = 355.0
 margin_top = 826.946
 margin_right = 665.0
@@ -118,10 +117,10 @@ custom_colors/font_color_pressed = Color( 1, 0.298039, 0.298039, 1 )
 text = "QUIT"
 
 [node name="ReplayButton" type="Button" parent="WinBG"]
-margin_left = 349.006
-margin_top = 818.862
-margin_right = 653.006
-margin_bottom = 863.862
+margin_left = 353.989
+margin_top = 744.112
+margin_right = 657.989
+margin_bottom = 789.112
 custom_styles/hover = SubResource( 4 )
 custom_styles/pressed = SubResource( 5 )
 custom_styles/focus = SubResource( 6 )

@@ -2,7 +2,7 @@
 
 [ext_resource path="res://objects/Player/BloodParticle/BloodParticle.gd" type="Script" id=1]
 [ext_resource path="res://objects/Player/BloodParticle/smoke.png" type="Texture" id=2]
-[ext_resource path="res://objects/Player/BloodParticle/slurp.ogg" type="AudioStream" id=3]
+[ext_resource path="res://objects/Player/BloodParticle/slurp.wav" type="AudioStream" id=3]
 
 [sub_resource type="SpatialMaterial" id=1]
 flags_transparent = true

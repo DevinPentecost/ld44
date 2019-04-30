@@ -47,7 +47,8 @@ func _submit_score():
 	
 	#Send the score
 	# no error handling for submission failures
-	var submit_url = "http://dreamlo.com/lb/BgYO9QhznU6z2dnGdcOcPQBcrAlcquwUyP5iKXLKk4vg/add/" + player_name + "/0/" + str(int(1000*player_time)) + "/"	
+	var submit_ms = str(int(1000*player_time))
+	var submit_url = "http://dreamlo.com/lb/BgYO9QhznU6z2dnGdcOcPQBcrAlcquwUyP5iKXLKk4vg/add/" + player_name + "/" + submit_ms + "/" + submit_ms + "/"	
 	$HTTPRequest.request(submit_url, PoolStringArray([]), false)
 	$WinBG/SubmitScore.text = "TIME SUBMITTED"
 	$WinBG/SubmitName.editable = true
@@ -62,15 +63,13 @@ func _on_SubmitName_text_changed(new_text):
 	
 	#Enable submit button when the user enters at least something
 	$WinBG/SubmitScore.disabled = false
-
-
+	
 func _on_SubmitName_text_entered(new_text):
 	
 	#User hit enter?
 	#Act like the submit button was pressed
 	_submit_score()
-
-
+	
 func _on_SubmitScore_pressed():
 	_submit_score()
 
@@ -80,12 +79,8 @@ func _on_ViewLB_pressed():
 
 
 func _on_QuitButton_pressed():
+	get_tree().quit()
 	
-	#Quit the game?
-	#Quit to main menu?
-	emit_signal("quit_pressed")
-
 func _on_ReplayButton_pressed():
 	
-	#Restart the scene maybe
-	emit_signal("restart_pressed")
+	get_tree().reload_current_scene()

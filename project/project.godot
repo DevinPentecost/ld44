@@ -15,8 +15,10 @@ _global_script_class_icons={
 
 [application]
 
-config/name="ld44"
+config/name="LitFV"
 run/main_scene="res://scenes/MainGame.tscn"
+boot_splash/image="res://icon.png"
+boot_splash/fullsize=false
 config/icon="res://icon.png"
 
 [display]

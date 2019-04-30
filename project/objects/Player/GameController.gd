@@ -18,7 +18,7 @@ onready var player_anim = $Player/CarModel/PlayerModel/AnimationPlayer
 onready var _fuel_meter = $FuelMeter
 
 #BGM
-var volume = {true: -45.0, false: -35.0}
+var volume = {true: -40, false: -30}
 
 
 # Called when the node enters the scene tree for the first time.
@@ -50,7 +50,7 @@ func _process(delta):
 				var seconds = int(round(time))%60
 				var time_stamp = "%02d : %02d" % [minutes, seconds]
 				$TimerLabel.text = time_stamp
-	
+				
 	
 func _start_race():
 	$StartMenu.hide()

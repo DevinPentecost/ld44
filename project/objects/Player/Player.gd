@@ -523,5 +523,5 @@ func sunset():
 	var end_location = Vector3(0, 0, -500)
 	var duration = 5
 	$Tween.interpolate_property(self, "translation", translation, end_location, duration, Tween.TRANS_LINEAR, Tween.EASE_IN)
-	$Tween.interpolate_property(self, "scale", scale, scale * 0, duration, Tween.TRANS_QUINT, Tween.EASE_IN)
+	$Tween.interpolate_property(self, "scale", scale, scale * 0.01, duration, Tween.TRANS_QUINT, Tween.EASE_IN)
 	$Tween.start()

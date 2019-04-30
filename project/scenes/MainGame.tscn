@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://objects/Player/GameController.gd" type="Script" id=1]
 [ext_resource path="res://objects/Player/Player.tscn" type="PackedScene" id=2]
@@ -16,6 +16,7 @@
 [ext_resource path="res://objects/UI/mmlb2.png" type="Texture" id=14]
 [ext_resource path="res://scenes/thanks.ogg" type="AudioStream" id=15]
 [ext_resource path="res://objects/UI/PauseMenu.tscn" type="PackedScene" id=16]
+[ext_resource path="res://assets/MonsterVania - Ghost Land - HydroGene.ogg" type="AudioStream" id=17]
 
 [sub_resource type="DynamicFont" id=1]
 size = 64
@@ -100,9 +101,14 @@ stream = ExtResource( 15 )
 
 [node name="PauseMenu" parent="." instance=ExtResource( 16 )]
 
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 17 )
+volume_db = -32.0
+autoplay = true
+
 [connection signal="race_finished" from="." to="FuelMeter" method="_on_MainGame_race_finished"]
-[connection signal="race_finished" from="." to="Bloodletting" method="_on_MainGame_race_finished"]
 [connection signal="race_finished" from="." to="Progress" method="_on_MainGame_race_finished"]
+[connection signal="race_finished" from="." to="Bloodletting" method="_on_MainGame_race_finished"]
 [connection signal="race_finished" from="." to="WinScreen" method="_on_MainGame_race_finished"]
 [connection signal="player_brake" from="Player" to="." method="_on_Player_player_brake"]
 [connection signal="track_completed" from="TrackFollower" to="." method="_on_TrackFollower_track_completed"]

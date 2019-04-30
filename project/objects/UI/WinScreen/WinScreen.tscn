@@ -148,7 +148,6 @@ environment = SubResource( 10 )
 stream = ExtResource( 5 )
 
 [node name="Voice" type="AudioStreamPlayer" parent="."]
-
 [connection signal="text_changed" from="WinBG/SubmitName" to="." method="_on_SubmitName_text_changed"]
 [connection signal="text_entered" from="WinBG/SubmitName" to="." method="_on_SubmitName_text_entered"]
 [connection signal="pressed" from="WinBG/SubmitScore" to="." method="_on_SubmitScore_pressed"]

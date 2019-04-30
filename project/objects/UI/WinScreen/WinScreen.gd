@@ -48,7 +48,7 @@ func _submit_score():
 	#Send the score
 	# no error handling for submission failures
 	var submit_ms = str(int(1000*player_time))
-	var submit_url = "http://dreamlo.com/lb/BgYO9QhznU6z2dnGdcOcPQBcrAlcquwUyP5iKXLKk4vg/add/" + player_name + "/" + submit_ms + "/" + submit_ms + "/"	
+	var submit_url = "https://us-central1-leaderbro-4781d.cloudfunctions.net/leaderboards/add_score?leaderboard_id=litfv&name={name}&score={score}".format({'name': player_name, 'score': submit_ms})
 	$HTTPRequest.request(submit_url, PoolStringArray([]), false)
 	$WinBG/SubmitScore.text = "TIME SUBMITTED"
 	$WinBG/SubmitName.editable = true

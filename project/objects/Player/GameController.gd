@@ -50,8 +50,7 @@ func _process(delta):
 				var seconds = int(round(time))%60
 				var time_stamp = "%02d : %02d" % [minutes, seconds]
 				$TimerLabel.text = time_stamp
-				
-	
+		
 func _start_race():
 	$StartMenu.hide()
 	player_anim.play("armature|armature|braking|armature|braking")

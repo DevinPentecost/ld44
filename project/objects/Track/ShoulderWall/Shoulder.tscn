@@ -3,14 +3,14 @@
 [ext_resource path="res://objects/Track/ShoulderWall/Shoulder.gd" type="Script" id=1]
 
 [sub_resource type="BoxShape" id=1]
-extents = Vector3( 4, 1, 1 )
+extents = Vector3( 4, 1, 5 )
 
 [sub_resource type="SpatialMaterial" id=2]
 albedo_color = Color( 0.14902, 0.372549, 0.0470588, 1 )
 
 [sub_resource type="CubeMesh" id=3]
 material = SubResource( 2 )
-size = Vector3( 8, 2, 2 )
+size = Vector3( 8, 2, 10 )
 
 [node name="Shoulder" type="Area"]
 script = ExtResource( 1 )

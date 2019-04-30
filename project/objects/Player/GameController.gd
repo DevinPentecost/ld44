@@ -18,13 +18,13 @@ onready var player_anim = $Player/CarModel/PlayerModel/AnimationPlayer
 onready var _fuel_meter = $FuelMeter
 
 #BGM
-var volume = {true: 0.5, false: 1}
+var volume = {true: -45.0, false: -35.0}
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	
-	$BGM.unit_db = volume[true]
+	$Music.volume_db = volume[true]
 	
 	set_process(true)
 	player_anim.play("armature|armature|intro.idle|armature|intro.idle")
@@ -65,9 +65,6 @@ func _start_race():
 	$FuelMeter/FuelBar.value = 100
 	
 	time = 0
-	
-	$BGM.unit_db = volume[false]
-	
 	
 func _end_race():
 	
@@ -118,8 +115,9 @@ func _on_Button_button_up():
 	$FuelMeter/Syringe/Syringe_bar.value = 100
 	$Tween.interpolate_property($FuelMeter, "rect_position", $FuelMeter.rect_position, $FuelMeter.rect_position + Vector2(200,0), 3, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	$Tween.interpolate_property($StartMenu, "modulate", Color(1,1,1,1), Color(1,1,1,0),2,Tween.TRANS_LINEAR, Tween.EASE_OUT)
+		
+	$Tween.interpolate_property($Music, "volume_db", $Music.volume_db, volume[false], 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
 	$Tween.start()
-	
 	
 	player_anim.play("armature|armature|intro.walk|armature|intro.walk")
 	yield(player_anim, "animation_finished" )
@@ -153,7 +151,8 @@ func _pause(paused):
 	$PauseMenu.show(paused)
 	
 	#Change music
-	$BGM.unit_db = volume[paused]
+	$Tween.interpolate_property($Music, "volume_db", $Music.volume_db, volume[paused], 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
+	$Tween.start()
 
 func _on_WinScreen_quit_pressed():
 	

@@ -3,7 +3,8 @@
 [ext_resource path="res://objects/UI/WinScreen/WinScreen.gd" type="Script" id=1]
 [ext_resource path="res://assets/2d/chainthing.png" type="Texture" id=2]
 [ext_resource path="res://assets/OpenSans-Bold.ttf" type="DynamicFontData" id=3]
-[ext_resource path="res://objects/UI/WinScreen/metals.ogg" type="AudioStream" id=4]
+[ext_resource path="res://objects/UI/Font.tres" type="DynamicFont" id=4]
+[ext_resource path="res://objects/UI/WinScreen/metals.ogg" type="AudioStream" id=5]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
@@ -24,12 +25,7 @@ font_data = ExtResource( 3 )
 
 [sub_resource type="StyleBoxEmpty" id=8]
 
-[sub_resource type="DynamicFont" id=9]
-size = 32
-use_filter = true
-font_data = ExtResource( 3 )
-
-[sub_resource type="ProceduralSky" id=10]
+[sub_resource type="ProceduralSky" id=9]
 sky_top_color = Color( 0.14902, 0.223529, 0.482353, 1 )
 sky_horizon_color = Color( 0.847059, 0.694118, 0.952941, 1 )
 sky_curve = 0.0182756
@@ -38,9 +34,9 @@ ground_horizon_color = Color( 0.423529, 0.372549, 0.388235, 1 )
 sun_latitude = 85.45
 sun_energy = 0.0
 
-[sub_resource type="Environment" id=11]
+[sub_resource type="Environment" id=10]
 background_mode = 2
-background_sky = SubResource( 10 )
+background_sky = SubResource( 9 )
 
 [node name="WinScreen" type="Control"]
 margin_left = 761.0
@@ -72,15 +68,15 @@ placeholder_alpha = 0.62
 
 [node name="SubmitScore" type="Button" parent="WinBG"]
 margin_left = 358.995
-margin_top = 571.902
+margin_top = 597.609
 margin_right = 659.995
-margin_bottom = 616.902
+margin_bottom = 642.609
 custom_styles/hover = SubResource( 4 )
 custom_styles/pressed = SubResource( 5 )
 custom_styles/focus = SubResource( 6 )
 custom_styles/disabled = SubResource( 7 )
 custom_styles/normal = SubResource( 8 )
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = ExtResource( 4 )
 custom_colors/font_color_hover = Color( 0.8, 0.517647, 0.517647, 1 )
 custom_colors/font_color_pressed = Color( 1, 0.298039, 0.298039, 1 )
 disabled = true
@@ -88,20 +84,21 @@ text = "SUBMIT SCORE"
 
 [node name="ViewLB" type="Button" parent="WinBG"]
 margin_left = 356.339
-margin_top = 656.207
+margin_top = 696.796
 margin_right = 660.339
-margin_bottom = 701.207
+margin_bottom = 741.796
 custom_styles/hover = SubResource( 4 )
 custom_styles/pressed = SubResource( 5 )
 custom_styles/focus = SubResource( 6 )
 custom_styles/disabled = SubResource( 7 )
 custom_styles/normal = SubResource( 8 )
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = ExtResource( 4 )
 custom_colors/font_color_hover = Color( 0.8, 0.517647, 0.517647, 1 )
 custom_colors/font_color_pressed = Color( 1, 0.298039, 0.298039, 1 )
 text = "LEADERBOARD"
 
 [node name="QuitButton" type="Button" parent="WinBG"]
+visible = false
 margin_left = 355.0
 margin_top = 826.946
 margin_right = 665.0
@@ -111,22 +108,22 @@ custom_styles/pressed = SubResource( 5 )
 custom_styles/focus = SubResource( 6 )
 custom_styles/disabled = SubResource( 7 )
 custom_styles/normal = SubResource( 8 )
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = ExtResource( 4 )
 custom_colors/font_color_hover = Color( 0.8, 0.517647, 0.517647, 1 )
 custom_colors/font_color_pressed = Color( 1, 0.298039, 0.298039, 1 )
 text = "QUIT"
 
 [node name="ReplayButton" type="Button" parent="WinBG"]
 margin_left = 353.989
-margin_top = 744.112
+margin_top = 798.231
 margin_right = 657.989
-margin_bottom = 789.112
+margin_bottom = 843.231
 custom_styles/hover = SubResource( 4 )
 custom_styles/pressed = SubResource( 5 )
 custom_styles/focus = SubResource( 6 )
 custom_styles/disabled = SubResource( 7 )
 custom_styles/normal = SubResource( 8 )
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = ExtResource( 4 )
 custom_colors/font_color_hover = Color( 0.8, 0.517647, 0.517647, 1 )
 custom_colors/font_color_pressed = Color( 1, 0.298039, 0.298039, 1 )
 text = "REPLAY"
@@ -143,12 +140,12 @@ align = 1
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
 
 [node name="env" type="WorldEnvironment" parent="."]
-environment = SubResource( 11 )
+environment = SubResource( 10 )
 
 [node name="Tween" type="Tween" parent="."]
 
 [node name="SFX" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 4 )
+stream = ExtResource( 5 )
 
 [node name="Voice" type="AudioStreamPlayer" parent="."]
 

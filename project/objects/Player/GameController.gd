@@ -11,6 +11,7 @@ var time = 0
 var finish_time = 0
 var brake_state = false
 var start_state = false
+var arm_lock = false
 
 onready var player_anim = $Player/CarModel/PlayerModel/AnimationPlayer
 
@@ -50,6 +51,8 @@ func _process(delta):
 				var seconds = int(round(time))%60
 				var time_stamp = "%02d : %02d" % [minutes, seconds]
 				$TimerLabel.text = time_stamp
+	elif not arm_lock:
+		$StartMenu/arm.rect_position = get_viewport().get_mouse_position()
 		
 func _start_race():
 	$StartMenu.hide()
@@ -110,12 +113,23 @@ func _on_Button_button_up():
 	$StartMenu/StartButton.disabled = true
 	$StartMenu/LBButton.disabled = true
 	
+	arm_lock = true
+	$StartMenu/arm/arm_default.hide()
+	$StartMenu/arm/arm_play.hide()
+	$StartMenu/arm/arm_load.show()
+	$StartMenu/StartBG.hide()
+	$StartMenu/StartBG_play.hide()
+	$StartMenu/StartBG_load.show()
+	
+	
+	
 	
 	$FuelMeter/Syringe/Syringe_bar.value = 100
 	$Tween.interpolate_property($FuelMeter, "rect_position", $FuelMeter.rect_position, $FuelMeter.rect_position + Vector2(200,0), 3, Tween.TRANS_LINEAR, Tween.EASE_OUT)
-	$Tween.interpolate_property($StartMenu, "modulate", Color(1,1,1,1), Color(1,1,1,0),2,Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	$Tween.interpolate_property($StartMenu, "modulate", Color(1,1,1,1), Color(1,1,1,0),3,Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	$Tween.interpolate_property($StartMenu, "rect_position", Vector2(0,0), Vector2(0,800),1,Tween.TRANS_QUAD, Tween.EASE_IN)
 		
-	$Tween.interpolate_property($Music, "volume_db", $Music.volume_db, volume[false], 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
+	$Tween.interpolate_property($Music, "volume_db", $Music.volume_db, volume[false], 0.5, Tween.TRANS_QUAD, Tween.EASE_IN)
 	$Tween.start()
 	
 	player_anim.play("armature|armature|intro.walk|armature|intro.walk")
@@ -190,3 +204,17 @@ func _unhandled_key_input(event):
 
 func _on_LBButton_button_up():
 	OS.shell_open("http://chilidog.faith/lb/ld44")
+
+
+func _on_StartButton_mouse_entered():
+	if not arm_lock:
+		$StartMenu/StartBG_play.show()
+		$StartMenu/arm/arm_play.show()
+		$StartMenu/arm/arm_default.hide()
+
+
+func _on_StartButton_mouse_exited():
+	if not arm_lock:
+		$StartMenu/StartBG_play.hide()
+		$StartMenu/arm/arm_play.hide()
+		$StartMenu/arm/arm_default.show()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://objects/Player/GameController.gd" type="Script" id=1]
 [ext_resource path="res://objects/Player/Player.tscn" type="PackedScene" id=2]
@@ -9,14 +9,17 @@
 [ext_resource path="res://objects/UI/Progress.tscn" type="PackedScene" id=7]
 [ext_resource path="res://objects/UI/Bloodletting.tscn" type="PackedScene" id=8]
 [ext_resource path="res://objects/UI/WinScreen/WinScreen.tscn" type="PackedScene" id=9]
-[ext_resource path="res://objects/UI/mm1.png" type="Texture" id=10]
-[ext_resource path="res://objects/UI/mmstart1.png" type="Texture" id=11]
-[ext_resource path="res://objects/UI/mmstart2.png" type="Texture" id=12]
-[ext_resource path="res://objects/UI/mmlb1.png" type="Texture" id=13]
-[ext_resource path="res://objects/UI/mmlb2.png" type="Texture" id=14]
-[ext_resource path="res://scenes/thanks.ogg" type="AudioStream" id=15]
-[ext_resource path="res://objects/UI/PauseMenu.tscn" type="PackedScene" id=16]
-[ext_resource path="res://assets/ld44.ogg" type="AudioStream" id=17]
+[ext_resource path="res://objects/UI/cardeck_bg.png" type="Texture" id=10]
+[ext_resource path="res://objects/UI/cardeck_play.png" type="Texture" id=11]
+[ext_resource path="res://objects/UI/cardeck_load.png" type="Texture" id=12]
+[ext_resource path="res://objects/UI/cardeck_arm1.png" type="Texture" id=13]
+[ext_resource path="res://objects/UI/cardeck_arm2.png" type="Texture" id=14]
+[ext_resource path="res://objects/UI/cardeck_arm3.png" type="Texture" id=15]
+[ext_resource path="res://objects/UI/mmlb1.png" type="Texture" id=16]
+[ext_resource path="res://objects/UI/mmlb2.png" type="Texture" id=17]
+[ext_resource path="res://scenes/thanks.ogg" type="AudioStream" id=18]
+[ext_resource path="res://objects/UI/PauseMenu.tscn" type="PackedScene" id=19]
+[ext_resource path="res://assets/ld44.ogg" type="AudioStream" id=20]
 
 [sub_resource type="DynamicFont" id=1]
 size = 64
@@ -50,13 +53,17 @@ rect_scale = Vector2( 2.61234, 2.61234 )
 player = NodePath("../Player")
 
 [node name="TimerLabel" type="Label" parent="."]
-margin_left = 528.507
-margin_top = 23.2455
-margin_right = 949.507
-margin_bottom = 111.246
+margin_left = 528.047
+margin_top = 6.8293
+margin_right = 949.047
+margin_bottom = 94.8298
 custom_fonts/font = SubResource( 1 )
 
 [node name="Progress" parent="." instance=ExtResource( 7 )]
+margin_left = 19.1779
+margin_top = 13.7864
+margin_right = 227.178
+margin_bottom = 47.7864
 track = NodePath("../TrackFollower")
 
 [node name="Tween" type="Tween" parent="."]
@@ -66,54 +73,94 @@ margin_left = -638.493
 margin_right = 641.507
 
 [node name="WinScreen" parent="." instance=ExtResource( 9 )]
+editor/display_folded = true
+visible = false
 game_controller = NodePath("..")
 
 [node name="StartMenu" type="Control" parent="."]
-editor/display_folded = true
 margin_right = 40.0
 margin_bottom = 40.0
 
 [node name="StartBG" type="TextureRect" parent="StartMenu"]
 margin_right = 1280.0
-margin_bottom = 800.0
+margin_bottom = 720.0
 texture = ExtResource( 10 )
 
+[node name="StartBG_play" type="TextureRect" parent="StartMenu"]
+visible = false
+margin_right = 1280.0
+margin_bottom = 720.0
+texture = ExtResource( 11 )
+
+[node name="StartBG_load" type="TextureRect" parent="StartMenu"]
+visible = false
+margin_right = 1280.0
+margin_bottom = 720.0
+texture = ExtResource( 12 )
+
+[node name="arm" type="Control" parent="StartMenu"]
+margin_left = -2.72073
+margin_top = 8.16223
+margin_right = 37.2793
+margin_bottom = 48.1622
+
+[node name="arm_default" type="Sprite" parent="StartMenu/arm"]
+position = Vector2( -18.5779, 259.008 )
+scale = Vector2( 0.75, 0.75 )
+texture = ExtResource( 13 )
+
+[node name="arm_play" type="Sprite" parent="StartMenu/arm"]
+visible = false
+position = Vector2( -38.0581, 268.748 )
+scale = Vector2( 0.75, 0.75 )
+texture = ExtResource( 14 )
+
+[node name="arm_load" type="Sprite" parent="StartMenu/arm"]
+visible = false
+position = Vector2( -18.5779, 259.008 )
+scale = Vector2( 0.75, 0.75 )
+texture = ExtResource( 15 )
+
 [node name="StartButton" type="TextureButton" parent="StartMenu"]
-margin_left = 507.324
-margin_top = 203.111
-margin_right = 777.324
-margin_bottom = 437.111
-texture_normal = ExtResource( 11 )
-texture_pressed = ExtResource( 11 )
-texture_hover = ExtResource( 12 )
+margin_left = 363.0
+margin_top = 381.0
+margin_right = 1063.0
+margin_bottom = 621.0
+rect_min_size = Vector2( 700, 240 )
+mouse_default_cursor_shape = 2
+shortcut_in_tooltip = false
 
 [node name="LBButton" type="TextureButton" parent="StartMenu"]
+visible = false
 margin_left = 1081.3
 margin_top = 545.889
 margin_right = 1285.3
 margin_bottom = 729.889
 rect_scale = Vector2( 0.74868, 0.74868 )
-texture_normal = ExtResource( 13 )
-texture_pressed = ExtResource( 13 )
-texture_hover = ExtResource( 14 )
+texture_normal = ExtResource( 16 )
+texture_pressed = ExtResource( 16 )
+texture_hover = ExtResource( 17 )
 
 [node name="SFX" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 15 )
+stream = ExtResource( 18 )
 
-[node name="PauseMenu" parent="." instance=ExtResource( 16 )]
+[node name="PauseMenu" parent="." instance=ExtResource( 19 )]
 
 [node name="Music" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 17 )
+stream = ExtResource( 20 )
 volume_db = -30.0
 autoplay = true
-[connection signal="race_finished" from="." to="Progress" method="_on_MainGame_race_finished"]
-[connection signal="race_finished" from="." to="Bloodletting" method="_on_MainGame_race_finished"]
+
 [connection signal="race_finished" from="." to="WinScreen" method="_on_MainGame_race_finished"]
+[connection signal="race_finished" from="." to="Progress" method="_on_MainGame_race_finished"]
 [connection signal="race_finished" from="." to="FuelMeter" method="_on_MainGame_race_finished"]
+[connection signal="race_finished" from="." to="Bloodletting" method="_on_MainGame_race_finished"]
 [connection signal="player_brake" from="Player" to="." method="_on_Player_player_brake"]
 [connection signal="track_completed" from="TrackFollower" to="." method="_on_TrackFollower_track_completed"]
 [connection signal="turning" from="TrackFollower" to="Player" method="_on_TrackFollower_turning"]
 [connection signal="button_up" from="StartMenu/StartButton" to="." method="_on_Button_button_up"]
+[connection signal="mouse_entered" from="StartMenu/StartButton" to="." method="_on_StartButton_mouse_entered"]
+[connection signal="mouse_exited" from="StartMenu/StartButton" to="." method="_on_StartButton_mouse_exited"]
 [connection signal="button_up" from="StartMenu/LBButton" to="." method="_on_LBButton_button_up"]
 [connection signal="quit_pressed" from="PauseMenu" to="." method="_on_PauseMenu_quit_pressed"]
 [connection signal="restart_pressed" from="PauseMenu" to="." method="_on_PauseMenu_restart_pressed"]
